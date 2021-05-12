@@ -16,12 +16,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @PersistenceContext
     private EntityManager em;
 
-    public List<Product> brandFind(String name) {
+    public List<Product> brandFind(String brand) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
         Root<Product> productRoot = criteriaQuery.from(Product.class);
 
-        Predicate predicateForConvert = criteriaBuilder.equal(productRoot.get("brand"), name);
+        Predicate predicateForConvert = criteriaBuilder.equal(productRoot.get("brand"), brand);
         criteriaQuery.where(predicateForConvert);
         return em.createQuery(criteriaQuery).getResultList();
     }

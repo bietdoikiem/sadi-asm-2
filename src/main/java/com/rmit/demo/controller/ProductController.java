@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
+@RequestMapping(path="/products")
 public class ProductController {
     private ProductService productService;
     @Autowired
@@ -12,16 +13,16 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @RequestMapping(path="/products", method=RequestMethod.GET)
+    @RequestMapping(path="/", method=RequestMethod.GET)
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    @RequestMapping(path="/products/converts", method=RequestMethod.GET)
+    @RequestMapping(path="converts/find", method=RequestMethod.GET)
     public List<Product> getConverts() {
         return productService.getConverts();
     }
-    @RequestMapping(path="/products", method=RequestMethod.POST)
+    @RequestMapping(path="", method=RequestMethod.POST)
     public int addProduct(@RequestBody Product product) {
         return productService.saveProduct(product);
     }

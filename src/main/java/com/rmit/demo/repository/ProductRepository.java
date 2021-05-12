@@ -12,5 +12,7 @@ import java.util.List;
 @Transactional
 public interface ProductRepository extends CrudRepository<Product, Integer>, ProductRepositoryCustom {
     public Product findByName(String name);
+    public Product findByPriceLessThan(double price);
+
     public List<Product> brandFind(String brand);
 }
