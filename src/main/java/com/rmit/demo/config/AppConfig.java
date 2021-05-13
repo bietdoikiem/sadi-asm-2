@@ -1,6 +1,8 @@
 package com.rmit.demo.config;
 
+import com.rmit.demo.model.Order;
 import com.rmit.demo.model.Product;
+import com.rmit.demo.service.OrderService;
 import com.rmit.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +40,12 @@ public class AppConfig {
     public ProductService productService() {
         return new ProductService();
     }
+
+    @Bean
+    public Order order() {return new Order();}
+
+    @Bean
+    public OrderService orderService() {return new OrderService();}
 
     @Autowired
     private Environment env;
