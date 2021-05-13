@@ -19,11 +19,13 @@ public class Order {
     /*@Column
     private Staff staff;
     @Column
-    private Provider provider;*/
+    private Provider provider;
+    @Column
+    private OrderDetail orderDetail;*/
 
     public Order(){}
 
-    public Order(int id/*, Date date*/, String stringDate/*, Staff staff, Provider provider*/) {
+    public Order(int id/*, Date date*/, String stringDate/*, Staff staff, Provider provider, OrderDetail orderDetail*/) {
         this.id = id;
         /*this.date = date;*/
         this.stringDate = stringDate;

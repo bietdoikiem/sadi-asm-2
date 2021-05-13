@@ -2,8 +2,11 @@ package com.rmit.demo.config;
 
 import com.rmit.demo.model.Order;
 import com.rmit.demo.model.Product;
+import com.rmit.demo.model.ReceiveDetail;
+import com.rmit.demo.model.ReceivingNote;
 import com.rmit.demo.service.OrderService;
 import com.rmit.demo.service.ProductService;
+import com.rmit.demo.service.ReceivingNoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +49,15 @@ public class AppConfig {
 
     @Bean
     public OrderService orderService() {return new OrderService();}
+
+    @Bean
+    public ReceivingNote receivingNote() {return new ReceivingNote();}
+
+    @Bean
+    public ReceivingNoteService receivingNoteService() {return new ReceivingNoteService();}
+
+    @Bean
+    public ReceiveDetail receiveDetail() {return new ReceiveDetail();}
 
     @Autowired
     private Environment env;
