@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="provider")
-public abstract class Provider extends Person {
+public class Provider extends Person {
     @Column
     private String fax;
     @Column
