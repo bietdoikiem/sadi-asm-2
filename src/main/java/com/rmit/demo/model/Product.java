@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 
-
 @Entity
 @Table(name="product")
 public class Product {
