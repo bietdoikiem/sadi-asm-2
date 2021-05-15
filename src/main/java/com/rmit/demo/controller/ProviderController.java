@@ -8,7 +8,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path="/providers")
 public class ProviderController {
-    private ProviderService providerService;
+    private final ProviderService providerService;
     @Autowired
     public ProviderController(ProviderService providerService) {
         this.providerService = providerService;
@@ -25,7 +25,7 @@ public class ProviderController {
 //    }
 
     @RequestMapping(path="", method=RequestMethod.POST)
-    public int addProduct(@RequestBody Provider provider) {
+    public int addProvider(@RequestBody Provider provider) {
         return providerService.saveProvider(provider);
     }
 }

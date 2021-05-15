@@ -6,6 +6,8 @@ import com.rmit.demo.model.Customer;
 import com.rmit.demo.service.CustomerService;
 import com.rmit.demo.model.Provider;
 import com.rmit.demo.service.ProviderService;
+import com.rmit.demo.model.Staff;
+import com.rmit.demo.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,6 +49,10 @@ public class AppConfig {
     public Provider provider() { return new Provider(); }
     @Bean
     public ProviderService providerService() { return new ProviderService(); }
+    @Bean
+    public Staff staff() { return new Staff(); }
+    @Bean
+    public StaffService staffService() { return new StaffService(); }
 
     @Autowired
     private Environment env;

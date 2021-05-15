@@ -1,17 +1,17 @@
 package com.rmit.demo.controller;
-import com.rmit.demo.model.Customer;
-import com.rmit.demo.service.CustomerService;
+import com.rmit.demo.model.Staff;
+import com.rmit.demo.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/customers")
-public class CustomerController {
-    private final CustomerService customerService;
+@RequestMapping(path="/staffs")
+public class StaffController {
+    private final StaffService staffService;
     @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
+    public StaffController(StaffService staffService) {
+        this.staffService = staffService;
     }
 
 //    @RequestMapping(path="/", method=RequestMethod.GET)
@@ -25,7 +25,7 @@ public class CustomerController {
 //    }
 
     @RequestMapping(path="", method=RequestMethod.POST)
-    public int addCustomer(@RequestBody Customer customer) {
-        return customerService.saveCustomer(customer);
+    public int addProduct(@RequestBody Staff staff) {
+        return staffService.saveStaff(staff);
     }
 }
