@@ -2,6 +2,8 @@ package com.rmit.demo.config;
 
 import com.rmit.demo.model.Product;
 import com.rmit.demo.service.ProductService;
+import com.rmit.demo.model.Customer;
+import com.rmit.demo.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +18,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-//import com.example.demo.model.Student;
-//import com.example.demo.service.StudentService;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -38,6 +37,10 @@ public class AppConfig {
     public ProductService productService() {
         return new ProductService();
     }
+    @Bean
+    public Customer customer() { return new Customer(); }
+    @Bean
+    public CustomerService customerService() { return new CustomerService(); }
 
     @Autowired
     private Environment env;
