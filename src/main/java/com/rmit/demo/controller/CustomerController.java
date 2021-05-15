@@ -3,7 +3,7 @@ import com.rmit.demo.model.Customer;
 import com.rmit.demo.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping(path="/customers")
@@ -14,15 +14,30 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-//    @RequestMapping(path="/", method=RequestMethod.GET)
-//    public List<Customer> getAllProducts() {
-//        return customerService.getAllProducts();
-//    }
-//
-//    @RequestMapping(path="converts/find", method=RequestMethod.GET)
-//    public List<Customer> getConverts() {
-//        return customerService.getConverts();
-//    }
+    // Get all customers
+    @RequestMapping(path="", method=RequestMethod.GET)
+    public ArrayList<Customer> getAllCustomers() {
+        return customerService.getAllCustomers();
+    }
+
+    // Get one customer by id
+    @RequestMapping(value="/search/id={id}", method = RequestMethod.GET)
+    public Customer getOne(@PathVariable("id") int id){
+        return customerService.getOne(id);
+    }
+
+    // Update one customer by id
+    @RequestMapping(value = "/id={id}", method = RequestMethod.PUT)
+    public String updateCustomer(@PathVariable int id, @RequestBody Customer customer) {
+        customer.setId(id);
+        return customerService.updateCustomer(customer);
+    }
+
+    // Delete one customer by id
+    @RequestMapping(value = "/id={id}", method = RequestMethod.DELETE)
+    public String deleteCustomer(@PathVariable int id) {
+        return customerService.deleteCustomer(getOne(id));
+    }
 
     @RequestMapping(path="", method=RequestMethod.POST)
     public int addCustomer(@RequestBody Customer customer) {
