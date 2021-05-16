@@ -1,7 +1,10 @@
 package com.rmit.demo.config;
 
+import com.rmit.demo.model.Category;
 import com.rmit.demo.model.Product;
+import com.rmit.demo.service.CategoryService;
 import com.rmit.demo.service.ProductService;
+import org.hibernate.boot.archive.scan.spi.ClassDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +40,16 @@ public class AppConfig {
     @Bean
     public ProductService productService() {
         return new ProductService();
+    }
+
+    // Define beans for Category assets
+    @Bean
+    public Category category() {
+        return new Category();
+    }
+    @Bean
+    public CategoryService categoryService() {
+        return new CategoryService();
     }
 
     @Autowired
