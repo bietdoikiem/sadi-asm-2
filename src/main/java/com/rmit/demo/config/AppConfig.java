@@ -8,6 +8,12 @@ import com.rmit.demo.model.Category;
 import com.rmit.demo.model.Product;
 import com.rmit.demo.service.CategoryService;
 import com.rmit.demo.service.ProductService;
+import com.rmit.demo.model.Customer;
+import com.rmit.demo.service.CustomerService;
+import com.rmit.demo.model.Provider;
+import com.rmit.demo.service.ProviderService;
+import com.rmit.demo.model.Staff;
+import com.rmit.demo.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +29,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-//import com.example.demo.model.Student;
-//import com.example.demo.service.StudentService;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -45,6 +48,18 @@ public class AppConfig {
     public ProductService productService() {
         return new ProductService();
     }
+    @Bean
+    public Customer customer() { return new Customer(); }
+    @Bean
+    public CustomerService customerService() { return new CustomerService(); }
+    @Bean
+    public Provider provider() { return new Provider(); }
+    @Bean
+    public ProviderService providerService() { return new ProviderService(); }
+    @Bean
+    public Staff staff() { return new Staff(); }
+    @Bean
+    public StaffService staffService() { return new StaffService(); }
 
     @Bean
     public Order order() {return new Order();}
