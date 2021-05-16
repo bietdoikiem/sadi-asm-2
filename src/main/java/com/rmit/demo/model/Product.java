@@ -34,15 +34,21 @@ public class Product {
     @JsonIgnore
     private List<OrderDetail> orderDetails;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="category_id", referencedColumnName = "id", nullable = true)
+    private Category category;
+
+
     @PreRemove
     public void preRemove() {
         for (OrderDetail orderDetail: orderDetails) {
             orderDetail.setProduct(null);
         }
     }
+  
+    public Product() {}
 
-
-    public Product(String name, String model, String brand, String company, String description, double price) {
+    public Product(String name, String model, String brand, String company, String description, double price, Category category) {
         super();
         this.name = name;
         this.model = model;
@@ -50,6 +56,7 @@ public class Product {
         this.company = company;
         this.description = description;
         this.price = price;
+        this.category = category;
     }
 
 
@@ -117,7 +124,21 @@ public class Product {
         this.orderDetails = orderDetails;
     }
 
-    public Product() {
+    public Category getCategory() {
+        return category;
     }
 
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setAll(Product product) {
+        this.name = product.getName();
+        this.model = product.getModel();
+        this.brand = product.getBrand();
+        this.company = product.getCompany();
+        this.description = product.getDescription();
+        this.price = product.getPrice();
+        this.category = product.getCategory();
+    }
 }
