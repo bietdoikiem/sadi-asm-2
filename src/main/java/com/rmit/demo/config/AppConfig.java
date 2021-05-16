@@ -1,6 +1,12 @@
 package com.rmit.demo.config;
 
+import com.rmit.demo.model.*;
+import com.rmit.demo.service.OrderDetailService;
+import com.rmit.demo.service.OrderService;
+import com.rmit.demo.service.ReceivingNoteService;
+import com.rmit.demo.model.Category;
 import com.rmit.demo.model.Product;
+import com.rmit.demo.service.CategoryService;
 import com.rmit.demo.service.ProductService;
 import com.rmit.demo.model.Customer;
 import com.rmit.demo.service.CustomerService;
@@ -11,6 +17,7 @@ import com.rmit.demo.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -53,6 +60,36 @@ public class AppConfig {
     public Staff staff() { return new Staff(); }
     @Bean
     public StaffService staffService() { return new StaffService(); }
+
+    @Bean
+    public Order order() {return new Order();}
+
+    @Bean
+    public OrderDetail orderDetail() {return new OrderDetail();}
+
+    @Bean
+    public OrderDetailService orderDetailService() {return new OrderDetailService();}
+
+    @Bean
+    public OrderService orderService() {return new OrderService();}
+
+    @Bean
+    public ReceivingNote receivingNote() {return new ReceivingNote();}
+
+    @Bean
+    public ReceivingNoteService receivingNoteService() {return new ReceivingNoteService();}
+
+    @Bean
+    public ReceiveDetail receiveDetail() {return new ReceiveDetail();}
+    // Define beans for Category assets
+    @Bean
+    public Category category() {
+        return new Category();
+    }
+    @Bean
+    public CategoryService categoryService() {
+        return new CategoryService();
+    }
 
     @Autowired
     private Environment env;
