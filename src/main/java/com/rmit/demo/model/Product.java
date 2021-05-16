@@ -1,17 +1,19 @@
 package com.rmit.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
-@Table(name="product")
+@Table(name = "product")
 public class Product {
 
     @Id
     @Column
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -28,7 +30,17 @@ public class Product {
     @Column
     private double price;
 
-    public Product() {}
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<OrderDetail> orderDetails;
+
+    @PreRemove
+    public void preRemove() {
+        for (OrderDetail orderDetail: orderDetails) {
+            orderDetail.setProduct(null);
+        }
+    }
+
 
     public Product(String name, String model, String brand, String company, String description, double price) {
         super();
@@ -96,4 +108,16 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
+    public Product() {
+    }
+
 }

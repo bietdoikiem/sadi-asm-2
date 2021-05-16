@@ -1,15 +1,14 @@
 package com.rmit.demo.config;
 
-import com.rmit.demo.model.Order;
-import com.rmit.demo.model.Product;
-import com.rmit.demo.model.ReceiveDetail;
-import com.rmit.demo.model.ReceivingNote;
+import com.rmit.demo.model.*;
+import com.rmit.demo.service.OrderDetailService;
 import com.rmit.demo.service.OrderService;
 import com.rmit.demo.service.ProductService;
 import com.rmit.demo.service.ReceivingNoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -46,6 +45,12 @@ public class AppConfig {
 
     @Bean
     public Order order() {return new Order();}
+
+    @Bean
+    public OrderDetail orderDetail() {return new OrderDetail();}
+
+    @Bean
+    public OrderDetailService orderDetailService() {return new OrderDetailService();}
 
     @Bean
     public OrderService orderService() {return new OrderService();}

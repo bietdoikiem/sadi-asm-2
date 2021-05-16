@@ -1,34 +1,40 @@
 package com.rmit.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name="order_table")
+@Table(name = "order_table")
 public class Order {
 
     @Id
     @Column
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
-    @Column(name="string_date")
-    private String stringDate;
+
     /*@Column
-    private Staff staff;
-    @Column
-    private Provider provider;
-    @Column
-    private OrderDetail orderDetail;*/
+        private Staff staff;
+        @Column
+        private Provider provider;*/
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
+    private List<OrderDetail> orderDetails;
 
-    public Order(){}
+    public Order() {
+    }
 
-    public Order(int id/*, Date date*/, String stringDate/*, Staff staff, Provider provider, OrderDetail orderDetail*/) {
+    public Order(int id, Date date/*, String stringDate, Staff staff, Provider provider, OrderDetail orderDetail*/) {
         this.id = id;
-        /*this.date = date;*/
-        this.stringDate = stringDate;
+        this.date = date;
         /*this.staff = staff;
         this.provider = provider;*/
     }
@@ -42,21 +48,23 @@ public class Order {
         this.id = id;
     }
 
-    /*public Date getDate() {
+    public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
-    }*/
-
-    public String getStringDate() {
-        return stringDate;
     }
 
-    public void setStringDate(String stringDate) {
-        this.stringDate = stringDate;
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
     }
+
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
 
     /*public Staff getStaff() {
         return staff;

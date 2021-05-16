@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Transactional
@@ -25,21 +26,27 @@ public class OrderService {
         return orders;
     }
 
-    public int saveOrder(Order order) {
-        orderRepository.save(order);
-        return order.getId();
+    public Order getOrderById(int id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+
+    public Order saveOrder(Order order) {
+        return orderRepository.save(order);
     }
 
     public String deleteOrder(int id) {
         orderRepository.deleteById(id);
-        return"product " + id + " removed!!";
+        return "product " + id + " removed!!";
     }
 
-    public Order updateOrder(Order order) {
-        Order existingOrder = orderRepository.findById(order.getId()).orElse(null);
-        existingOrder.setId(order.getId());
-        existingOrder.setStringDate(order.getStringDate());
+    public Order updateOrder(int id, Order order) {
+        Order existingOrder = orderRepository.findById(id).orElse(null);
+        if (existingOrder != null) {
+            existingOrder.setId(order.getId());
+            existingOrder.setDate(order.getDate());
+            return orderRepository.save(existingOrder);
+        }
+        return null;
 
-        return orderRepository.save(existingOrder);
     }
 }
