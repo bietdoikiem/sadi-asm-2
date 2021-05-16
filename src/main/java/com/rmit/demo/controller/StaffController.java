@@ -3,7 +3,8 @@ import com.rmit.demo.model.Staff;
 import com.rmit.demo.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping(path="/staffs")
@@ -14,18 +15,34 @@ public class StaffController {
         this.staffService = staffService;
     }
 
-//    @RequestMapping(path="/", method=RequestMethod.GET)
-//    public List<Customer> getAllProducts() {
-//        return customerService.getAllProducts();
-//    }
-//
-//    @RequestMapping(path="converts/find", method=RequestMethod.GET)
-//    public List<Customer> getConverts() {
-//        return customerService.getConverts();
-//    }
+    // Get all staffs
+    @RequestMapping(path="", method=RequestMethod.GET)
+    public ArrayList<Staff> getAllStaffs() {
+        return staffService.getAllStaffs();
+    }
+
+    // Get one staff by id
+    @RequestMapping(value="/search/id={id}", method = RequestMethod.GET)
+    public Staff getOne(@PathVariable("id") int id){
+        return staffService.getOne(id);
+    }
+
+    // Update one staff by id
+    @RequestMapping(value = "/id={id}", method = RequestMethod.PUT)
+    public String updateStaff(@PathVariable int id, @RequestBody Staff customer) {
+        customer.setId(id);
+        return staffService.updateStaff(customer);
+    }
+
+    // Delete one staff by id
+    @RequestMapping(value = "/id={id}", method = RequestMethod.DELETE)
+    public String deleteStaff(@PathVariable int id) {
+        return staffService.deleteStaff(getOne(id));
+    }
+
 
     @RequestMapping(path="", method=RequestMethod.POST)
-    public int addProduct(@RequestBody Staff staff) {
+    public int addStaff(@RequestBody Staff staff) {
         return staffService.saveStaff(staff);
     }
 }
