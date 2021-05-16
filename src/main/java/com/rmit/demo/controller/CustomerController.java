@@ -39,6 +39,7 @@ public class CustomerController {
         return customerService.deleteCustomer(getOne(id));
     }
 
+    // Add one customer
     @RequestMapping(path="", method=RequestMethod.POST)
     public int addCustomer(@RequestBody Customer customer) {
         return customerService.saveCustomer(customer);
