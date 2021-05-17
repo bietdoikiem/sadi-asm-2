@@ -35,7 +35,7 @@ public class OrderController {
             Order order = orderService.getOrderById(id);
             return ResponseHandler.generateResponse(HttpStatus.OK, true, "/orders/" + order.getId(), String.format("Order %d fetched successfully.", order.getId()), order);
         } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/orders/" + id, String.format("Order %d not found.", id), new HashMap());
+            return ResponseHandler.generateResponse(HttpStatus.OK, false, "/orders/" + id, String.format("Order %d not found.", id), new HashMap());
         }
     }
 
