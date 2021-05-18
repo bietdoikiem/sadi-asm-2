@@ -81,6 +81,9 @@ public class AppConfig {
 
     @Bean
     public ReceiveDetail receiveDetail() {return new ReceiveDetail();}
+
+
+
     // Define beans for Category assets
     @Bean
     public Category category() {

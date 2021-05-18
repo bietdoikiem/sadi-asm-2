@@ -1,6 +1,7 @@
 package com.rmit.demo.service;
 
 import com.rmit.demo.model.OrderDetail;
+import com.rmit.demo.model.Product;
 import com.rmit.demo.repository.OrderDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,23 @@ public class OrderDetailService {
     }
 
     // DO UPDATE Here
-
+    public int updateOrderDetail(int orderDetailId, OrderDetail orderDetail) {
+        OrderDetail foundOrderDetail = orderDetailRepository.findById(orderDetailId).orElse(null);
+        if (foundOrderDetail != null) {
+            foundOrderDetail.setAll(orderDetail);
+            orderDetailRepository.save(foundOrderDetail);
+            return orderDetailId;
+        }
+        return -1;
+    }
 
     // Do DELETE Here
+    public int deleteOrderDetail(int orderDetailId) {
+        OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElse(null);
+        if (orderDetail != null) {
+            orderDetailRepository.delete(orderDetail);
+            return orderDetailId;
+        }
+        return -1;
+    }
 }

@@ -21,9 +21,9 @@ public class OrderDetail {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
+
     @Column
     private int quantity;
-
 
     @Column
     private double price;
@@ -37,15 +37,6 @@ public class OrderDetail {
         this.price = price;
         this.product = product;
     }
-
-
-//    public Product getProduct() {
-//        return product;
-//    }
-//
-//    public void setProduct(Product product) {
-//        this.product = product;
-//    }
 
     public int getQuantity() {
         return quantity;
@@ -86,5 +77,14 @@ public class OrderDetail {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+    public void setAll(OrderDetail orderDetail) {
+        this.id = orderDetail.getId();
+        this.product = orderDetail.getProduct();
+        this.order = orderDetail.getOrder();
+        this.quantity = orderDetail.getQuantity();
+        this.price = orderDetail.getPrice();
+    }
+
 
 }
