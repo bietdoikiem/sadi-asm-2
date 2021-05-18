@@ -37,14 +37,9 @@ public class ProductController implements CrudController<Product> {
 
     // READ one Product
     public ResponseEntity<Object> getOne(@PathVariable int id) {
-        try {
-            Product product = productService.getOne(id);
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/products/" + product.getId(),
-                    String.format("Product %d fetch successfully.", product.getId()), product);
-        } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/products/" + id,
-                    String.format("Product %d not found.", id), new HashMap());
-        }
+        Product product = productService.getOne(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/products/" + product.getId(),
+                String.format("Product %d fetch successfully.", product.getId()), product);
     }
 
     // CREATE a product

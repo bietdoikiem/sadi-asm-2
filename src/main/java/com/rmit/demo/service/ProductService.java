@@ -1,4 +1,5 @@
 package com.rmit.demo.service;
+
 import com.rmit.demo.model.Product;
 import com.rmit.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,13 @@ public class ProductService implements CrudService<Product> {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> allProducts = productRepository.findAll(pageable);
 
-        if(allProducts.hasContent()) {
+        if (allProducts.hasContent()) {
             return allProducts.getContent();
         }
         return new ArrayList<>();
 
     }
+
     // READ one Product by ID
     public Product getOne(int id) {
         return productRepository.findById(id).orElse(null);
@@ -72,11 +74,8 @@ public class ProductService implements CrudService<Product> {
 
     // DELETE a Product
     public int deleteOne(int productId) {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product != null) {
-            productRepository.delete(product);
-            return productId;
-        }
-        return -1;
+        Product product = productRepository.findById(productId).orElseThrow(NullPointerException::new);
+        productRepository.delete(product);
+        return product.getId();
     }
 }

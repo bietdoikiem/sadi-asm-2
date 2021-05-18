@@ -62,12 +62,9 @@ public class DeliveryDetailService implements CrudService<DeliveryDetail> {
 
     // DELETE One Delivery Detail
     public int deleteOne(int id) {
-        DeliveryDetail foundDeliveryDetail = deliveryDetailRepository.findById(id).orElse(null);
-        if (foundDeliveryDetail != null) {
-            deliveryDetailRepository.delete(foundDeliveryDetail);
-            return id;
-        }
-        return -1;
+        DeliveryDetail foundDeliveryDetail = deliveryDetailRepository.findById(id).orElseThrow(NullPointerException::new);
+        deliveryDetailRepository.delete(foundDeliveryDetail);
+        return foundDeliveryDetail.getId();
     }
 
 

@@ -9,11 +9,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class DeliveryNoteService {
 
     @Autowired
@@ -61,12 +63,9 @@ public class DeliveryNoteService {
 
     // DELETE One DeliveryNote
     public int deleteDeliveryNote(int id) {
-        DeliveryNote foundDeliveryNote = deliveryNoteRepository.findById(id).orElse(null);
-        if (foundDeliveryNote != null) {
+        DeliveryNote foundDeliveryNote = deliveryNoteRepository.findById(id).orElseThrow(NullPointerException::new);
             deliveryNoteRepository.delete(foundDeliveryNote);
-            return id;
-        }
-        return -1;
+            return foundDeliveryNote.getId();
     }
 
 

@@ -37,14 +37,9 @@ public class DeliveryDetailController implements CrudController<DeliveryDetail> 
 
     @Override
     public ResponseEntity<Object> getOne(int id) {
-        try {
-            DeliveryDetail foundDeliveryDetail = deliveryDetailService.getOne(id);
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/delivery-details/%d", foundDeliveryDetail.getId()),
-                    String.format("DeliveryDetail %d fetched successfully.", foundDeliveryDetail.getId()), foundDeliveryDetail);
-        } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, false, String.format("/delivery-details/%d", id),
-                    String.format("DeliveryDetail %d not found.", id), new HashMap<>());
-        }
+        DeliveryDetail foundDeliveryDetail = deliveryDetailService.getOne(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/delivery-details/%d", foundDeliveryDetail.getId()),
+                String.format("DeliveryDetail %d fetched successfully.", foundDeliveryDetail.getId()), foundDeliveryDetail);
     }
 
     @Override
@@ -64,11 +59,7 @@ public class DeliveryDetailController implements CrudController<DeliveryDetail> 
     @Override
     public ResponseEntity<Object> deleteOne(int id) {
         int result = deliveryDetailService.deleteOne(id);
-        if (result >= 0) {
-            return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, String.format("/delivery-details/%d", result),
-                    String.format("DeliveryDetail %d deleted successfully.", result), null);
-        }
-        return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, false, String.format("/delivery-details/%d", id),
-                String.format("DeliveryDetail %d not found to be deleted.", id), null);
+        return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, String.format("/delivery-details/%d", result),
+                String.format("DeliveryDetail %d deleted successfully.", result), null);
     }
 }

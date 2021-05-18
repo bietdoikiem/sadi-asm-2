@@ -96,6 +96,19 @@ public class AppConfig {
     @Bean
     public DeliveryDetailService deliveryDetailService() {return new DeliveryDetailService();}
 
+    @Bean
+    public SaleInvoice saleInvoice() {return new SaleInvoice();}
+
+    @Bean
+    public SaleInvoiceService saleInvoiceService() {return new SaleInvoiceService();}
+
+    @Bean
+    public SaleDetail saleDetail() {return new SaleDetail();}
+
+    @Bean
+    public SaleDetailService saleDetailService() {return new SaleDetailService();}
+
+
     @Autowired
     private Environment env;
 

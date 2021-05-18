@@ -36,6 +36,9 @@ public class SaleInvoice {
     @Column
     private int totalValue;
 
+    public SaleInvoice() {
+    }
+
 
     public SaleInvoice(int id, Date date, Staff staff, Customer customer, Product product, int quantity, int price, int totalValue) {
         this.id = id;

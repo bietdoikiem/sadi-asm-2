@@ -18,6 +18,17 @@ public final class DateUtils {
         return date;
     }
 
+    public static Date parseDatetime(String datetimeStr) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        Date date = null;
+        try {
+            date = formatter.parse(datetimeStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
     public static String dateToString(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String stringDate = null;

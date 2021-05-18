@@ -35,14 +35,9 @@ public class DeliveryNoteController implements CrudController<DeliveryNote> {
 
     // READ All DeliveryNote by ID
     public ResponseEntity<Object> getOne(@PathVariable int id) {
-        try {
-            DeliveryNote deliveryNote = deliveryNoteService.getDeliveryNoteById(id);
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/delivery-notes/" + deliveryNote.getId(),
-                    String.format("DeliveryNote %d fetch successfully.", deliveryNote.getId()), deliveryNote);
-        } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/delivery-notes/" + id,
-                    String.format("DeliveryNote %d not found.", id), new HashMap());
-        }
+        DeliveryNote deliveryNote = deliveryNoteService.getDeliveryNoteById(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/delivery-notes/" + deliveryNote.getId(),
+                String.format("DeliveryNote %d fetch successfully.", deliveryNote.getId()), deliveryNote);
     }
 
     // CREATE One DeliveryNote
@@ -53,7 +48,7 @@ public class DeliveryNoteController implements CrudController<DeliveryNote> {
     }
 
     // UPDATE One DeliveryNote
-    public ResponseEntity<Object> updateOne(@PathVariable int id,@RequestBody DeliveryNote deliveryNote) {
+    public ResponseEntity<Object> updateOne(@PathVariable int id, @RequestBody DeliveryNote deliveryNote) {
         DeliveryNote updatedNote = deliveryNoteService.updateDeliveryNote(id, deliveryNote);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/delivery-notes/" + updatedNote.getId(),
                 String.format("DeliveryNote %d updated successfully.", updatedNote.getId()), updatedNote);
@@ -62,12 +57,8 @@ public class DeliveryNoteController implements CrudController<DeliveryNote> {
     // DELETE One DeliveryNote
     public ResponseEntity<Object> deleteOne(@PathVariable int id) {
         int result = deliveryNoteService.deleteDeliveryNote(id);
-        if (result >= 0) {
-            return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, String.format("/delivery-notes/%d", result),
-                    String.format("DeliveryDetail %d deleted successfully.", result), null);
-        }
-        return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, false, String.format("/delivery-notes/%d", id),
-                String.format("DeliveryDetail %d not found to be deleted.", id), null);
+        return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, String.format("/delivery-notes/%d", result),
+                String.format("DeliveryNote %d deleted successfully.", result), null);
     }
 
 

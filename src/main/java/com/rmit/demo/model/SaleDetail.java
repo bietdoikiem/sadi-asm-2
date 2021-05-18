@@ -25,6 +25,11 @@ public class SaleDetail {
     @Column
     private int price;
 
+    public SaleDetail() {
+    }
+
+    ;
+
     public SaleDetail(int id, SaleInvoice saleInvoice, Product product, int quantity, int price) {
         this.id = id;
         this.saleInvoice = saleInvoice;

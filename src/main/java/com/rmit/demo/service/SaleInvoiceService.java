@@ -2,16 +2,21 @@ package com.rmit.demo.service;
 
 import com.rmit.demo.model.SaleInvoice;
 import com.rmit.demo.repository.SaleInvoiceRepository;
+import com.rmit.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class SaleInvoiceService implements CrudService<SaleInvoice> {
 
     @Autowired
@@ -59,11 +64,18 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
 
     @Override
     public int deleteOne(int id) {
-        SaleInvoice saleInvoice = saleInvoiceRepository.findById(id).orElse(null);
-        if (saleInvoice != null) {
-            saleInvoiceRepository.delete(saleInvoice);
-            return id;
-        }
-        return -1;
+        SaleInvoice saleInvoice = saleInvoiceRepository.findById(id).orElseThrow(NullPointerException::new);
+        saleInvoiceRepository.delete(saleInvoice);
+        return saleInvoice.getId();
+    }
+
+    public List<SaleInvoice> filterByDate(Date startDate, Date endDate) {
+        // Format Date to String
+        String startDateStr = DateUtils.dateToString(startDate);
+        String endDateStr = DateUtils.dateToString(endDate);
+        // Normalized Datetime to the beginning and very end of the date
+        Date normStartDate = DateUtils.parseDatetime(startDateStr + " 00:00:00");
+        Date normEndDate = DateUtils.parseDatetime(endDateStr + " 23:59:59");
+        return saleInvoiceRepository.findAllByDateBetween(normStartDate, normEndDate);
     }
 }
