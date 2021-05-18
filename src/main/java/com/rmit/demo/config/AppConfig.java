@@ -1,19 +1,12 @@
 package com.rmit.demo.config;
 
 import com.rmit.demo.model.*;
-import com.rmit.demo.service.OrderDetailService;
-import com.rmit.demo.service.OrderService;
-import com.rmit.demo.service.ReceivingNoteService;
+import com.rmit.demo.service.*;
 import com.rmit.demo.model.Category;
 import com.rmit.demo.model.Product;
-import com.rmit.demo.service.CategoryService;
-import com.rmit.demo.service.ProductService;
 import com.rmit.demo.model.Customer;
-import com.rmit.demo.service.CustomerService;
 import com.rmit.demo.model.Provider;
-import com.rmit.demo.service.ProviderService;
 import com.rmit.demo.model.Staff;
-import com.rmit.demo.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -90,6 +83,18 @@ public class AppConfig {
     public CategoryService categoryService() {
         return new CategoryService();
     }
+
+    @Bean
+    public DeliveryNote deliveryNote() {return new DeliveryNote();}
+
+    @Bean
+    public DeliveryNoteService deliveryNoteService() {return new DeliveryNoteService();}
+
+    @Bean
+    public DeliveryDetail deliveryDetail() { return new DeliveryDetail();}
+
+    @Bean
+    public DeliveryDetailService deliveryDetailService() {return new DeliveryDetailService();}
 
     @Autowired
     private Environment env;

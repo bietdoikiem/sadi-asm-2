@@ -33,6 +33,10 @@ public class Product {
     @JsonIgnore
     private List<OrderDetail> orderDetails;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<DeliveryDetail> deliveryDetailList;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="category_id", referencedColumnName = "id", nullable = true)
     private Category category;
@@ -131,13 +135,4 @@ public class Product {
         this.category = category;
     }
 
-    public void setAll(Product product) {
-        this.name = product.getName();
-        this.model = product.getModel();
-        this.brand = product.getBrand();
-        this.company = product.getCompany();
-        this.description = product.getDescription();
-        this.price = product.getPrice();
-        this.category = product.getCategory();
-    }
 }

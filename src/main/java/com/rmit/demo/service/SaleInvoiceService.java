@@ -1,0 +1,69 @@
+package com.rmit.demo.service;
+
+import com.rmit.demo.model.SaleInvoice;
+import com.rmit.demo.repository.SaleInvoiceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class SaleInvoiceService implements CrudService<SaleInvoice> {
+
+    @Autowired
+    private SaleInvoiceRepository saleInvoiceRepository;
+
+
+    @Override
+    public List<SaleInvoice> getAll() {
+        var it = saleInvoiceRepository.findAll();
+        return new ArrayList<>(it);
+    }
+
+    @Override
+    public List<SaleInvoice> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SaleInvoice> allSaleInvoices = saleInvoiceRepository.findAll(pageable);
+        if (allSaleInvoices.hasContent()) {
+            return allSaleInvoices.getContent();
+        }
+        return new ArrayList<SaleInvoice>();
+    }
+
+    @Override
+    public SaleInvoice getOne(int id) {
+        return saleInvoiceRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public SaleInvoice saveOne(SaleInvoice object) {
+        return saleInvoiceRepository.saveAndReset(object);
+    }
+
+    @Override
+    public SaleInvoice updateOne(int id, SaleInvoice object) {
+        SaleInvoice foundSaleInvoice = saleInvoiceRepository.findById(id).orElse(null);
+        if (foundSaleInvoice != null) {
+            foundSaleInvoice.setDate(object.getDate());
+            foundSaleInvoice.setStaff(object.getStaff());
+            foundSaleInvoice.setCustomer(object.getCustomer());
+            foundSaleInvoice.setTotalValue(object.getTotalValue());
+            return saleInvoiceRepository.saveAndReset(foundSaleInvoice);
+        }
+        return null;
+    }
+
+    @Override
+    public int deleteOne(int id) {
+        SaleInvoice saleInvoice = saleInvoiceRepository.findById(id).orElse(null);
+        if (saleInvoice != null) {
+            saleInvoiceRepository.delete(saleInvoice);
+            return id;
+        }
+        return -1;
+    }
+}

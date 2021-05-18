@@ -1,6 +1,8 @@
-package com.rmit.demo.repository;
+package com.rmit.demo.repository.impl;
 
 import com.rmit.demo.model.Product;
+import com.rmit.demo.repository.ProductRepository;
+import com.rmit.demo.repository.ProductRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

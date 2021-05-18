@@ -17,4 +17,6 @@ public interface ProductRepository extends CrudRepository<Product, Integer>, Pro
     public Product findByPriceLessThan(double price);
 
     public List<Product> brandFind(String brand);
+
+    Product saveAndReset(Product product);
 }
