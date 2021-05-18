@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.*;
 
 @RestController
@@ -63,8 +64,8 @@ public class OrderController {
     }
 
     // Filter by Date
-    @RequestMapping(value="/filter/{startDate}/{endDate}", method = RequestMethod.GET)
-    public ArrayList<Order> filterByStartAndEndDate(@PathVariable("startDate") @JsonFormat(pattern = "dd-MM-yyyy") Date startDate, @PathVariable("endDate") @JsonFormat(pattern = "dd-MM-yyyy") Date endDate){
+    @RequestMapping(value="/filter", method = RequestMethod.GET)
+    public ArrayList<Order> filterByStartAndEndDate(@RequestParam String startDate, @RequestParam String endDate) throws ParseException {
         return orderService.getOrdersByStartDateAndEndDate(startDate, endDate);
     }
 }

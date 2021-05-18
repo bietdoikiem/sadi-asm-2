@@ -1,6 +1,7 @@
-package com.rmit.demo.repository;
+package com.rmit.demo.repository.impl;
 
 import com.rmit.demo.model.Staff;
+import com.rmit.demo.repository.StaffRepositoryCustom;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

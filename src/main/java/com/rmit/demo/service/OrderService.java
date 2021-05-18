@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,13 +61,21 @@ public class OrderService {
 
     }
 
-    public ArrayList<Order> getOrdersByStartDateAndEndDate(Date startDate, Date endDate) {
+    public ArrayList<Order> getOrdersByStartDateAndEndDate(String startDate, String endDate) throws ParseException {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        sdf.setLenient(false);
+
+        Date parsedStart = sdf.parse(startDate);
+        Date parsedEnd = sdf.parse(endDate);
+
         ArrayList<Order> orders = new ArrayList<>();
         orderRepository.findAll().forEach(orders::add);
 
         ArrayList<Order> filteredOrders = new ArrayList<>();
         for (Order order : orders) {
-            if ( startDate.getTime() <= order.getDate().getTime() && order.getDate().getTime() <= endDate.getTime()) {
+            if ( parsedStart.getTime() <= order.getDate().getTime() && order.getDate().getTime() <= parsedEnd.getTime()) {
+                //orderRepository.findById(order.getId()).forEach(filteredOrders::add);
                 filteredOrders.add(order);
             }
         }
