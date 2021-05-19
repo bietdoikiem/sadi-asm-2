@@ -1,6 +1,7 @@
 package com.rmit.demo.service;
 
 import com.rmit.demo.model.Order;
+import com.rmit.demo.model.ReceiveDetail;
 import com.rmit.demo.model.ReceivingNote;
 import com.rmit.demo.repository.OrderRepository;
 import com.rmit.demo.repository.ReceivingNoteRepository;
@@ -8,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Transactional
@@ -18,6 +22,12 @@ public class ReceivingNoteService {
     @Autowired
     private ReceivingNoteRepository receivingNoteRepository;
 
+    //get a receive note by id
+    public ReceivingNote getReceivingNoteById(int id) {
+        return receivingNoteRepository.findById(id).orElse(null);
+    }
+
+    // get all receiving note
     public List<ReceivingNote> getAllReceivingNotes() {
         var it = receivingNoteRepository.findAll();
         var receivingNotes = new ArrayList<ReceivingNote>();
@@ -26,21 +36,45 @@ public class ReceivingNoteService {
         return receivingNotes;
     }
 
-    public int saveReceivingNote(ReceivingNote receivingNote) {
-        receivingNoteRepository.save(receivingNote);
-        return receivingNote.getId();
+    // Create receiving note
+    public ReceivingNote saveReceivingNote(ReceivingNote receivingNote) {
+        return receivingNoteRepository.save(receivingNote);
     }
 
+    // Delete receiving note
     public String deleteReceivingNote(int id) {
         receivingNoteRepository.deleteById(id);
         return"Receiving note " + id + " removed!!";
     }
 
+    // Update receiving note
     public ReceivingNote updateReceivingNote(ReceivingNote receivingNote) {
         ReceivingNote existingReceivingNote = receivingNoteRepository.findById(receivingNote.getId()).orElse(null);
-        existingReceivingNote.setId(receivingNote.getId());
-        existingReceivingNote.setDate(receivingNote.getDate());
 
-        return receivingNoteRepository.save(existingReceivingNote);
+        if (existingReceivingNote != null) {
+            existingReceivingNote.setAll(receivingNote);
+            return receivingNoteRepository.save(existingReceivingNote);
+        }
+        return null;
+    }
+
+    public ArrayList<ReceivingNote> getReceivingNotesByStartDateAndEndDate(String startDate, String endDate) throws ParseException {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        sdf.setLenient(false);
+
+        Date parsedStart = sdf.parse(startDate);
+        Date parsedEnd = sdf.parse(endDate);
+
+        ArrayList<ReceivingNote> receivingNotes = new ArrayList<>();
+        receivingNoteRepository.findAll().forEach(receivingNotes::add);
+
+        ArrayList<ReceivingNote> filteredReceivingNote = new ArrayList<>();
+        for (ReceivingNote receivingNote : receivingNotes) {
+            if ( parsedStart.getTime() <= receivingNote.getDate().getTime() && receivingNote.getDate().getTime() <= parsedEnd.getTime()) {
+                filteredReceivingNote.add(receivingNote);
+            }
+        }
+        return filteredReceivingNote;
     }
 }

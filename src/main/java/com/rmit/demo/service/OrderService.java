@@ -75,7 +75,6 @@ public class OrderService {
         ArrayList<Order> filteredOrders = new ArrayList<>();
         for (Order order : orders) {
             if ( parsedStart.getTime() <= order.getDate().getTime() && order.getDate().getTime() <= parsedEnd.getTime()) {
-                //orderRepository.findById(order.getId()).forEach(filteredOrders::add);
                 filteredOrders.add(order);
             }
         }

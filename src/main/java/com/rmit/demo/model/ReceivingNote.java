@@ -1,5 +1,6 @@
 package com.rmit.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Configurable;
 
@@ -16,6 +17,7 @@ public class ReceivingNote {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     @Column
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -60,7 +62,7 @@ public class ReceivingNote {
         this.staff = staff;
     }
 
-    public List<ReceiveDetail> receiveDetail() {
+    public List<ReceiveDetail> getReceiveDetail() {
         return receiveDetail;
     }
 
@@ -68,5 +70,12 @@ public class ReceivingNote {
         this.receiveDetail = receiveDetail;
     }
 
+    public void setAll(ReceivingNote receivingNote) {
+        this.id = receivingNote.getId();
+        this.date = receivingNote.getDate();
+        this.staff = receivingNote.getStaff();
+        this.receiveDetail = receivingNote.getReceiveDetail();
+
+    }
 
 }
