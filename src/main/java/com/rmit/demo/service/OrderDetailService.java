@@ -33,23 +33,23 @@ public class OrderDetailService {
     }
 
     // DO UPDATE Here
-    public int updateOrderDetail(int orderDetailId, OrderDetail orderDetail) {
+    public OrderDetail updateOrderDetail(int orderDetailId, OrderDetail orderDetail) {
         OrderDetail foundOrderDetail = orderDetailRepository.findById(orderDetailId).orElse(null);
         if (foundOrderDetail != null) {
             foundOrderDetail.setAll(orderDetail);
-            orderDetailRepository.save(foundOrderDetail);
-            return orderDetailId;
+
+            return orderDetailRepository.save(foundOrderDetail);
         }
-        return -1;
+        return null;
     }
 
     // Do DELETE Here
-    public int deleteOrderDetail(int orderDetailId) {
+    public String deleteOrderDetail(int orderDetailId) {
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElse(null);
         if (orderDetail != null) {
             orderDetailRepository.delete(orderDetail);
-            return orderDetailId;
+            return "order detail " + orderDetailId + " removed!!";
         }
-        return -1;
+        return null;
     }
 }

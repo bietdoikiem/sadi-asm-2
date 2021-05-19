@@ -58,13 +58,14 @@ public class ReceivingNoteController {
     public ResponseEntity<Object> updateReceivingNote(@RequestBody ReceivingNote receivingNote) {
         //return receivingNoteService.updateReceivingNote(receivingNote);
         ReceivingNote updateReceivingNote = receivingNoteService.updateReceivingNote(receivingNote);
-        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/receivingNotes/" + receivingNote.getId(), String.format("Order %d updated successfully.", updatedOrder.getId()), updatedOrder);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/receivingNotes/" + receivingNote.getId(), String.format("Order %d updated successfully.", updateReceivingNote.getId()), updateReceivingNote);
     }
 
     // Delete
     @RequestMapping(path= "/{id}", method = RequestMethod.DELETE)
-    public String deleteReceivingNote(@PathVariable int id) {
-        return receivingNoteService.deleteReceivingNote(id);
+    public ResponseEntity<Object> deleteReceivingNote(@PathVariable int id) {
+        receivingNoteService.deleteReceivingNote(id);
+        return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, "/receivingNotes/" + id, String.format("Receiving note %d deleted successfully.", id), null);
     }
 
     // Filter by Date
