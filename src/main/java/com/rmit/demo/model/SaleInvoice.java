@@ -1,7 +1,6 @@
 package com.rmit.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,7 +11,6 @@ import java.util.List;
 public class SaleInvoice {
 
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -28,9 +26,9 @@ public class SaleInvoice {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "saleInvoice", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<SaleDetail> saleDetails;
+    @OneToMany(mappedBy = "saleInvoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<SaleDetail> saleDetailList;
 
 
     @Column
@@ -40,7 +38,7 @@ public class SaleInvoice {
     }
 
 
-    public SaleInvoice(int id, Date date, Staff staff, Customer customer, Product product, int quantity, int price, int totalValue) {
+    public SaleInvoice(int id, Date date, Staff staff, Customer customer, int totalValue) {
         this.id = id;
         this.date = date;
         this.staff = staff;
@@ -89,11 +87,12 @@ public class SaleInvoice {
     }
 
 
-    public List<SaleDetail> getSaleDetails() {
-        return saleDetails;
+    public List<SaleDetail> getSaleDetailList() {
+        return saleDetailList;
     }
 
-    public void setSaleDetails(List<SaleDetail> saleDetails) {
-        this.saleDetails = saleDetails;
+    private void setSaleDetailList(List<SaleDetail> saleDetailList) {
+        this.saleDetailList = saleDetailList;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.rmit.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,8 +11,8 @@ import java.util.List;
 @Table(name = "delivery_note")
 public class DeliveryNote extends InventoryNote {
 
-    @OneToMany(mappedBy = "deliveryNote", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(mappedBy = "deliveryNote", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<DeliveryDetail> deliveryDetailList;
 
     public DeliveryNote() {

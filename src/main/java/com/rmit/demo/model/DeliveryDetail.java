@@ -1,23 +1,25 @@
 package com.rmit.demo.model;
 
 
+import com.rmit.demo.composite.DeliveryDetailId;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="delivery_detail")
 public class DeliveryDetail {
 
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @EmbeddedId
+    private DeliveryDetailId id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="delivery_note_id", referencedColumnName = "id")
+    @JoinColumn(name="delivery_note_id")
+    @MapsId("deliveryNoteId")
     private DeliveryNote deliveryNote;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="product_id", referencedColumnName = "id")
+    @JoinColumn(name="product_id")
+    @MapsId("productId")
     private Product product;
 
     @Column
@@ -25,18 +27,18 @@ public class DeliveryDetail {
 
     public DeliveryDetail() {};
 
-    public DeliveryDetail(int id, DeliveryNote deliveryNote, Product product, int quantity) {
+    public DeliveryDetail(DeliveryDetailId id, DeliveryNote deliveryNote, Product product, int quantity) {
         this.id = id;
         this.deliveryNote = deliveryNote;
         this.product = product;
         this.quantity = quantity;
     }
 
-    public int getId() {
+    public DeliveryDetailId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(DeliveryDetailId id) {
         this.id = id;
     }
 

@@ -2,6 +2,7 @@ package com.rmit.demo.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,9 +18,13 @@ public class Category {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-
     @Column
     private String name;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<Product> products;
+
 
     public List<Product> getProducts() {
         return products;
@@ -28,10 +33,6 @@ public class Category {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
-
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Product> products = new ArrayList<>();
 
 
     public Category() {};

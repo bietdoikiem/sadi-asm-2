@@ -9,7 +9,6 @@ import java.util.Date;
 public abstract class InventoryNote {
 
     @Id
-    @Column
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 

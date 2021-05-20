@@ -1,22 +1,25 @@
 package com.rmit.demo.model;
 
+
+import com.rmit.demo.composite.SaleDetailId;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "sale_detail")
 public class SaleDetail {
 
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @EmbeddedId
+    private SaleDetailId id;
 
-    @ManyToOne
-    @JoinColumn(name = "sale_invoice_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "sale_invoice_id")
+    @MapsId("saleInvoiceId")
     private SaleInvoice saleInvoice;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @MapsId("productId")
     private Product product;
 
     @Column
@@ -30,7 +33,7 @@ public class SaleDetail {
 
     ;
 
-    public SaleDetail(int id, SaleInvoice saleInvoice, Product product, int quantity, int price) {
+    public SaleDetail(SaleDetailId id, SaleInvoice saleInvoice, Product product, int quantity, int price) {
         this.id = id;
         this.saleInvoice = saleInvoice;
         this.product = product;
@@ -38,11 +41,11 @@ public class SaleDetail {
         this.price = price;
     }
 
-    public int getId() {
+    public SaleDetailId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(SaleDetailId id) {
         this.id = id;
     }
 
@@ -77,4 +80,6 @@ public class SaleDetail {
     public void setPrice(int price) {
         this.price = price;
     }
+
+
 }

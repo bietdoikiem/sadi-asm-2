@@ -1,6 +1,6 @@
 package com.rmit.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
@@ -11,7 +11,6 @@ import java.util.List;
 public class Product {
 
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -25,31 +24,54 @@ public class Product {
     private String company;
     @Column
     private String description;
-    // @Column Category here
     @Column
     private double price;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    // One-to-Many Relationships
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<OrderDetail> orderDetails;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<DeliveryDetail> deliveryDetailList;
 
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<SaleDetail> saleDetailList;
+
+    // Many-to-One Relationships
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="category_id", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = true)
     private Category category;
 
+    public List<DeliveryDetail> getDeliveryDetailList() {
+        return deliveryDetailList;
+    }
+
+    private void setDeliveryDetailList(List<DeliveryDetail> deliveryDetailList) {
+        this.deliveryDetailList = deliveryDetailList;
+    }
+
+    public List<SaleDetail> getSaleDetailList() {
+        return saleDetailList;
+    }
+
+    public void setSaleDetailList(List<SaleDetail> saleDetailList) {
+        this.saleDetailList = saleDetailList;
+    }
 
     @PreRemove
     public void preRemove() {
-        for (OrderDetail orderDetail: orderDetails) {
+        for (OrderDetail orderDetail : orderDetails) {
             orderDetail.setProduct(null);
         }
     }
-  
-    public Product() {}
+
+    public Product() {
+    }
 
     public Product(String name, String model, String brand, String company, String description, double price, Category category) {
         super();

@@ -3,15 +3,17 @@ package com.rmit.demo.service;
 import com.rmit.demo.model.SaleDetail;
 import com.rmit.demo.model.SaleInvoice;
 import com.rmit.demo.repository.SaleDetailRepository;
+import com.rmit.demo.repository.SaleInvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.TransactionScoped;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
 @Service
@@ -20,6 +22,7 @@ public class SaleDetailService implements CrudService<SaleDetail> {
 
     @Autowired
     private SaleDetailRepository saleDetailRepository;
+
 
     @Override
     public List<SaleDetail> getAll() {
@@ -49,6 +52,7 @@ public class SaleDetailService implements CrudService<SaleDetail> {
     }
 
     @Override
+    @Transactional
     public SaleDetail updateOne(int id, SaleDetail object) {
         SaleDetail saleDetail = saleDetailRepository.findById(id).orElse(null);
         if (saleDetail != null) {

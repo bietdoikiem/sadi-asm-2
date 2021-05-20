@@ -24,39 +24,39 @@ public class DeliveryNoteController implements CrudController<DeliveryNote> {
 
     // READ All DeliveryNote
     public ResponseEntity<Object> getAll() {
-        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/delivery-notes", "All DeliveryNotes fetched successfully.", deliveryNoteService.getAllDeliveryNotes());
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/delivery-notes", "All DeliveryNotes fetched successfully.", deliveryNoteService.getAll());
     }
 
     // READ All DeliveryNote by page and size
     public ResponseEntity<Object> getAll(@RequestParam int page, @RequestParam int size) {
-        List<DeliveryNote> deliveryNoteList = deliveryNoteService.getAllDeliveryNotes(page, size);
+        List<DeliveryNote> deliveryNoteList = deliveryNoteService.getAll(page, size);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/delivery-notes?page=%d&size=%d", page, size), String.format("DeliveryNotes (page %d - size %d) fetched successfully.", page, size), deliveryNoteList);
     }
 
     // READ All DeliveryNote by ID
     public ResponseEntity<Object> getOne(@PathVariable int id) {
-        DeliveryNote deliveryNote = deliveryNoteService.getDeliveryNoteById(id);
+        DeliveryNote deliveryNote = deliveryNoteService.getOne(id);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/delivery-notes/" + deliveryNote.getId(),
                 String.format("DeliveryNote %d fetch successfully.", deliveryNote.getId()), deliveryNote);
     }
 
     // CREATE One DeliveryNote
     public ResponseEntity<Object> saveOne(@RequestBody DeliveryNote deliveryNote) {
-        DeliveryNote savedNote = deliveryNoteService.saveDeliveryNote(deliveryNote);
+        DeliveryNote savedNote = deliveryNoteService.saveOne(deliveryNote);
         return ResponseHandler.generateResponse(HttpStatus.CREATED, true, "/delivery-notes/" + deliveryNote.getId(),
                 String.format("DeliveryNote %d created successfully.", savedNote.getId()), savedNote);
     }
 
     // UPDATE One DeliveryNote
     public ResponseEntity<Object> updateOne(@PathVariable int id, @RequestBody DeliveryNote deliveryNote) {
-        DeliveryNote updatedNote = deliveryNoteService.updateDeliveryNote(id, deliveryNote);
+        DeliveryNote updatedNote = deliveryNoteService.updateOne(id, deliveryNote);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/delivery-notes/" + updatedNote.getId(),
                 String.format("DeliveryNote %d updated successfully.", updatedNote.getId()), updatedNote);
     }
 
     // DELETE One DeliveryNote
     public ResponseEntity<Object> deleteOne(@PathVariable int id) {
-        int result = deliveryNoteService.deleteDeliveryNote(id);
+        int result = deliveryNoteService.deleteOne(id);
         return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, String.format("/delivery-notes/%d", result),
                 String.format("DeliveryNote %d deleted successfully.", result), null);
     }

@@ -4,10 +4,13 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,4 +30,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         map.put("data", null);
         return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(Throwable.class)
+    private ResponseEntity<Object> handleAnyException(Throwable ex, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.clear();
+        map.put("timestamp", new Date());
+        map.put("status", HttpStatus.BAD_REQUEST.value());
+        map.put("isSuccess", false);
+        map.put("message", "Bad Request " + ex);
+        map.put("data", null);
+        return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+    }
+
+
 }

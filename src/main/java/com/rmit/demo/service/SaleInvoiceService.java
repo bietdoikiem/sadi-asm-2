@@ -1,5 +1,6 @@
 package com.rmit.demo.service;
 
+import com.rmit.demo.model.SaleDetail;
 import com.rmit.demo.model.SaleInvoice;
 import com.rmit.demo.repository.SaleInvoiceRepository;
 import com.rmit.demo.utils.DateUtils;
@@ -9,15 +10,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @Service
 @Transactional
 public class SaleInvoiceService implements CrudService<SaleInvoice> {
+
+//    @Autowired
+//    private EntityManager em;
 
     @Autowired
     private SaleInvoiceRepository saleInvoiceRepository;
@@ -45,7 +50,12 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
     }
 
     @Override
+    @Transactional
     public SaleInvoice saveOne(SaleInvoice object) {
+        for (SaleDetail saleDetail : object.getSaleDetailList()) {
+            System.out.println(saleDetail);
+            saleDetail.setSaleInvoice(object);
+        }
         return saleInvoiceRepository.saveAndReset(object);
     }
 

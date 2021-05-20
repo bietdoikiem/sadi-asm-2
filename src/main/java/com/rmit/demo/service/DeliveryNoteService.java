@@ -1,6 +1,7 @@
 package com.rmit.demo.service;
 
 
+import com.rmit.demo.model.DeliveryDetail;
 import com.rmit.demo.model.DeliveryNote;
 import com.rmit.demo.repository.DeliveryNoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,25 +12,24 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
 @Transactional
-public class DeliveryNoteService {
+public class DeliveryNoteService implements CrudService<DeliveryNote> {
 
     @Autowired
     private DeliveryNoteRepository deliveryNoteRepository;
 
     // READ All DeliveryNotes
-    public List<DeliveryNote> getAllDeliveryNotes() {
+    public List<DeliveryNote> getAll() {
         // Find all delivery notes via it repository
         var it = deliveryNoteRepository.findAll();
         return new ArrayList<DeliveryNote>(it);
     }
 
     // READ All DeliveryNotes by Pagination
-    public List<DeliveryNote> getAllDeliveryNotes(int page, int size) {
+    public List<DeliveryNote> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<DeliveryNote> allDeliveryNotes = deliveryNoteRepository.findAll(pageable);
 
@@ -41,17 +41,20 @@ public class DeliveryNoteService {
     }
 
     // READ One DeliveryNote by ID
-    public DeliveryNote getDeliveryNoteById(int id) {
+    public DeliveryNote getOne(int id) {
         return deliveryNoteRepository.findById(id).orElse(null);
     }
 
-    // CREATE One DeliveryNote
-    public DeliveryNote saveDeliveryNote(DeliveryNote deliveryNote) {
+    // CREATE One DeliveryNote (including One-Shot Array of deliveryDetail)
+    public DeliveryNote saveOne(DeliveryNote deliveryNote) {
+        for (DeliveryDetail deliveryDetail: deliveryNote.getDeliveryDetailList()) {
+            deliveryDetail.setDeliveryNote(deliveryNote);
+        }
         return deliveryNoteRepository.saveAndReset(deliveryNote);
     }
 
     // UPDATE One DeliveryNote
-    public DeliveryNote updateDeliveryNote(int id, DeliveryNote deliveryNote) {
+    public DeliveryNote updateOne(int id, DeliveryNote deliveryNote) {
         DeliveryNote foundDeliveryNote = deliveryNoteRepository.findById(id).orElse(null);
         if (foundDeliveryNote != null) {
             foundDeliveryNote.setDate(deliveryNote.getDate());
@@ -62,7 +65,7 @@ public class DeliveryNoteService {
     }
 
     // DELETE One DeliveryNote
-    public int deleteDeliveryNote(int id) {
+    public int deleteOne(int id) {
         DeliveryNote foundDeliveryNote = deliveryNoteRepository.findById(id).orElseThrow(NullPointerException::new);
             deliveryNoteRepository.delete(foundDeliveryNote);
             return foundDeliveryNote.getId();
