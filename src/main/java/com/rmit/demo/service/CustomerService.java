@@ -4,7 +4,11 @@ import com.rmit.demo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
+import java.util.List;
 
 @Transactional
 @Service
@@ -67,5 +71,15 @@ public class CustomerService {
     // Get one customer by id
     public Customer getOne(int id) {
         return customerRepository.findById(id).orElse(null);
+    }
+
+    // Get all customers by pagination
+    public ArrayList<Customer> getAllCustomers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Customer> allCustomers = customerRepository.findAll(pageable);
+        if (allCustomers.hasContent()) {
+            return new ArrayList<>(allCustomers.getContent());
+        }
+        return new ArrayList<>();
     }
 }

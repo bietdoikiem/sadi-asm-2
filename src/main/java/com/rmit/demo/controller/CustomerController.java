@@ -1,13 +1,15 @@
 package com.rmit.demo.controller;
 
 import com.rmit.demo.model.Customer;
-import com.rmit.demo.model.Order;
 import com.rmit.demo.service.CustomerService;
 import com.rmit.demo.utils.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -84,5 +86,13 @@ public class CustomerController {
         return customers != null
                 ? ResponseHandler.generateResponse(HttpStatus.OK, true, "/customers?phone=" + phone, "All Customers having the phone number of " + phone + " fetched successfully.", customers)
                 : ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/customers?phone=" + phone, String.format("Customers having the phone number of %s not found.", phone), new HashMap());
+    }
+
+    // Get all customers by pagination
+    @RequestMapping(path = "", method = RequestMethod.GET, params = {"page", "size"})
+    public ResponseEntity<Object> getAll(int page, int size) {
+        ArrayList<Customer> allCustomers = customerService.getAllCustomers(page, size);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/customers?page=%d&size=%d", page, size),
+                String.format("All Customers (page %d - size %d) fetched successfully", page, size), allCustomers);
     }
 }
