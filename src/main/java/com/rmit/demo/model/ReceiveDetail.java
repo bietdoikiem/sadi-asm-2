@@ -24,7 +24,8 @@ public class ReceiveDetail {
 
     public ReceiveDetail() {}
 
-    public ReceiveDetail(Product product, int quantity) {
+    public ReceiveDetail(int id, Product product, int quantity) {
+        this.id = id;
         this.product = product;
         this.quantity = quantity;
     }
@@ -44,6 +45,20 @@ public class ReceiveDetail {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setAll (ReceiveDetail receiveDetail) {
+        this.id = receiveDetail.getId();
+        this.product = receiveDetail.getProduct();
+        this.quantity = receiveDetail.getQuantity();
     }
 
 }

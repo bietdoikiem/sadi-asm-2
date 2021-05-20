@@ -58,7 +58,7 @@ public class ReceivingNoteController {
     public ResponseEntity<Object> updateReceivingNote(@RequestBody ReceivingNote receivingNote) {
         //return receivingNoteService.updateReceivingNote(receivingNote);
         ReceivingNote updateReceivingNote = receivingNoteService.updateReceivingNote(receivingNote);
-        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/receivingNotes/" + receivingNote.getId(), String.format("Order %d updated successfully.", updateReceivingNote.getId()), updateReceivingNote);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/receivingNotes/" + receivingNote.getId(), String.format("Receiving note %d updated successfully.", updateReceivingNote.getId()), updateReceivingNote);
     }
 
     // Delete

@@ -1,23 +1,15 @@
 package com.rmit.demo.config;
 
 import com.rmit.demo.model.*;
-import com.rmit.demo.service.OrderDetailService;
-import com.rmit.demo.service.OrderService;
-import com.rmit.demo.service.ReceivingNoteService;
+import com.rmit.demo.service.*;
 import com.rmit.demo.model.Category;
 import com.rmit.demo.model.Product;
-import com.rmit.demo.service.CategoryService;
-import com.rmit.demo.service.ProductService;
 import com.rmit.demo.model.Customer;
-import com.rmit.demo.service.CustomerService;
 import com.rmit.demo.model.Provider;
-import com.rmit.demo.service.ProviderService;
 import com.rmit.demo.model.Staff;
-import com.rmit.demo.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -81,6 +73,11 @@ public class AppConfig {
 
     @Bean
     public ReceiveDetail receiveDetail() {return new ReceiveDetail();}
+
+    @Bean
+    public ReceiveDetailService receiveDetailService() {
+        return new ReceiveDetailService();
+    }
 
 
 
