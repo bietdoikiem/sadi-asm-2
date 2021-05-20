@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 @Transactional
 public interface DeliveryNoteRepository extends CrudRepository<DeliveryNote, Integer>, JpaRepository<DeliveryNote, Integer>, DeliveryNoteRepositoryCustom {
-
+    List<DeliveryNote> findAllByDateBetween(Date startDate, Date endDate);
 }

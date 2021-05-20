@@ -1,13 +1,17 @@
 package com.rmit.demo.controller;
 
+import com.rmit.demo.model.DeliveryDetail;
 import com.rmit.demo.model.DeliveryNote;
 import com.rmit.demo.service.DeliveryNoteService;
+import com.rmit.demo.utils.DateUtils;
 import com.rmit.demo.utils.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,6 +63,24 @@ public class DeliveryNoteController implements CrudController<DeliveryNote> {
         int result = deliveryNoteService.deleteOne(id);
         return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, String.format("/delivery-notes/%d", result),
                 String.format("DeliveryNote %d deleted successfully.", result), null);
+    }
+
+    // READ ALL DeliveryDetails of a DeliveryNote
+    @RequestMapping(path = "{id}/delivery-details", method = RequestMethod.GET)
+    public ResponseEntity<Object> getAllDeliveryDetailsByDeliveryNote(@PathVariable int id) {
+        List<DeliveryDetail> deliveryDetailList = deliveryNoteService.getAllDeliveryDetailsByDeliveryNoteId(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/delivery-notes/%d/delivery-details", id),
+                String.format("All DeliveryDetail of DeliveryNote %d fetched successfully.", id), deliveryDetailList);
+    }
+
+    // FILTER ALL DeliveryNote between startDate and endDate
+    @RequestMapping(path = "filter", method = RequestMethod.GET, params = {"startDate", "endDate"})
+    public ResponseEntity<Object> filterByPeriod(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate, @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate) {
+        List<DeliveryNote> deliveryNoteList = deliveryNoteService.filterByPeriod(startDate, endDate);
+        String startDateStr = DateUtils.dateToString(startDate);
+        String endDateStr = DateUtils.dateToString(endDate);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/delivery-notes/filter?startDate=%s&endDate=%s", startDateStr, endDateStr),
+                String.format("All DeliveryNote between %s and %s fetched successfully.", startDateStr, endDateStr), deliveryNoteList);
     }
 
 

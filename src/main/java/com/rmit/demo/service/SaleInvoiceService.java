@@ -2,6 +2,7 @@ package com.rmit.demo.service;
 
 import com.rmit.demo.model.SaleDetail;
 import com.rmit.demo.model.SaleInvoice;
+import com.rmit.demo.repository.SaleDetailRepository;
 import com.rmit.demo.repository.SaleInvoiceRepository;
 import com.rmit.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +28,9 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
 
     @Autowired
     private SaleInvoiceRepository saleInvoiceRepository;
+
+    @Autowired
+    private SaleDetailRepository saleDetailRepository;
 
 
     @Override
@@ -53,7 +58,6 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
     @Transactional
     public SaleInvoice saveOne(SaleInvoice object) {
         for (SaleDetail saleDetail : object.getSaleDetailList()) {
-            System.out.println(saleDetail);
             saleDetail.setSaleInvoice(object);
         }
         return saleInvoiceRepository.saveAndReset(object);
@@ -79,7 +83,13 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
         return saleInvoice.getId();
     }
 
-    public List<SaleInvoice> filterByDate(Date startDate, Date endDate) {
+    // READ ALL SaleDetails of a SaleInvoice By Id
+    public List<SaleDetail> getAllSaleDetailsBySaleInvoice(int id) {
+        SaleInvoice saleInvoice = saleInvoiceRepository.findById(id).orElseThrow(NullPointerException::new);
+        return saleDetailRepository.findSaleDetailsBySaleInvoice(saleInvoice);
+    }
+
+    public List<SaleInvoice> filterByPeriod(Date startDate, Date endDate) {
         // Format Date to String
         String startDateStr = DateUtils.dateToString(startDate);
         String endDateStr = DateUtils.dateToString(endDate);

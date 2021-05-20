@@ -93,8 +93,6 @@ public class AppConfig {
     @Bean
     public DeliveryDetail deliveryDetail() { return new DeliveryDetail();}
 
-    @Bean
-    public DeliveryDetailService deliveryDetailService() {return new DeliveryDetailService();}
 
     @Bean
     public SaleInvoice saleInvoice() {return new SaleInvoice();}
@@ -105,8 +103,8 @@ public class AppConfig {
     @Bean
     public SaleDetail saleDetail() {return new SaleDetail();}
 
-    @Bean
-    public SaleDetailService saleDetailService() {return new SaleDetailService();}
+
+
 
 
     @Autowired

@@ -1,25 +1,25 @@
 package com.rmit.demo.model;
 
 
-import com.rmit.demo.composite.SaleDetailId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "sale_detail")
 public class SaleDetail {
 
-    @EmbeddedId
-    private SaleDetailId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "sale_invoice_id")
-    @MapsId("saleInvoiceId")
+    @JoinColumn(name = "sale_invoice_id", referencedColumnName = "id")
     private SaleInvoice saleInvoice;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @MapsId("productId")
     private Product product;
 
     @Column
@@ -33,7 +33,7 @@ public class SaleDetail {
 
     ;
 
-    public SaleDetail(SaleDetailId id, SaleInvoice saleInvoice, Product product, int quantity, int price) {
+    public SaleDetail(int id, SaleInvoice saleInvoice, Product product, int quantity, int price) {
         this.id = id;
         this.saleInvoice = saleInvoice;
         this.product = product;
@@ -41,11 +41,11 @@ public class SaleDetail {
         this.price = price;
     }
 
-    public SaleDetailId getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(SaleDetailId id) {
+    public void setId(int id) {
         this.id = id;
     }
 

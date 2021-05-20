@@ -1,7 +1,6 @@
 package com.rmit.demo.model;
 
 
-import com.rmit.demo.composite.DeliveryDetailId;
 
 import javax.persistence.*;
 
@@ -9,17 +8,16 @@ import javax.persistence.*;
 @Table(name="delivery_detail")
 public class DeliveryDetail {
 
-    @EmbeddedId
-    private DeliveryDetailId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="delivery_note_id")
-    @MapsId("deliveryNoteId")
     private DeliveryNote deliveryNote;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="product_id")
-    @MapsId("productId")
     private Product product;
 
     @Column
@@ -27,18 +25,18 @@ public class DeliveryDetail {
 
     public DeliveryDetail() {};
 
-    public DeliveryDetail(DeliveryDetailId id, DeliveryNote deliveryNote, Product product, int quantity) {
+    public DeliveryDetail(int id, DeliveryNote deliveryNote, Product product, int quantity) {
         this.id = id;
         this.deliveryNote = deliveryNote;
         this.product = product;
         this.quantity = quantity;
     }
 
-    public DeliveryDetailId getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(DeliveryDetailId id) {
+    public void setId(int id) {
         this.id = id;
     }
 

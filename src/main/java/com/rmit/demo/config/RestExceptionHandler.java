@@ -40,6 +40,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         map.put("isSuccess", false);
         map.put("message", "Bad Request " + ex);
         map.put("data", null);
+        ex.printStackTrace();
         return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
     }
 

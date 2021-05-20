@@ -1,5 +1,6 @@
 package com.rmit.demo.controller;
 
+import com.rmit.demo.model.SaleDetail;
 import com.rmit.demo.model.SaleInvoice;
 import com.rmit.demo.repository.SaleInvoiceRepository;
 import com.rmit.demo.service.SaleInvoiceService;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -70,12 +68,21 @@ public class SaleInvoiceController implements CrudController<SaleInvoice> {
                 String.format("SaleInvoice %d deleted successfully.", result), null);
     }
 
+    // READ ALL SaleDetail of a SaleInvoice
+    @RequestMapping(path="{id}/sale-details", method = RequestMethod.GET)
+    public ResponseEntity<Object> getAllSaleDetailsBySaleInvoice(@PathVariable int id) {
+        List<SaleDetail> saleDetailList = saleInvoiceService.getAllSaleDetailsBySaleInvoice(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/sale-invoices/%d/sale-details", id),
+                String.format("All SaleDetail of SaleInvoice %d fetched successfully.", id), saleDetailList);
+    }
+
+    // FILTER SaleInvoices by startDate and endDate (dd-MM-yyyy)
     @RequestMapping(path = "filter", method = RequestMethod.GET, params = {"startDate", "endDate"})
     public ResponseEntity<Object> filterByDate(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate, @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate) {
-        List<SaleInvoice> saleInvoiceList = saleInvoiceService.filterByDate(startDate, endDate);
+        List<SaleInvoice> saleInvoiceList = saleInvoiceService.filterByPeriod(startDate, endDate);
         String startDateStr = DateUtils.dateToString(startDate);
         String endDateStr = DateUtils.dateToString(endDate);
-        return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/sale-invoices/search?startDate=%s&endDate=%s", startDateStr, endDateStr),
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/sale-invoices/filter?startDate=%s&endDate=%s", startDateStr, endDateStr),
                 String.format("All SaleInvoices between %s and %s fetched successfully.", startDateStr, endDateStr),saleInvoiceList);
     }
 }
