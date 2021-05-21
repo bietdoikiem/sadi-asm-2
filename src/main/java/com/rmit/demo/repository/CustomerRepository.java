@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 @Transactional
 public interface CustomerRepository extends CrudRepository<Customer, Integer>, CustomerRepositoryCustom {
     Customer findByName(String name);
-    Customer findById(int id);
     Customer findByAddress(String address);
     Customer findByPhone(String phone);
 }

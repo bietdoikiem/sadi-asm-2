@@ -1,9 +1,13 @@
 package com.rmit.demo.service;
 
+import com.rmit.demo.model.Customer;
 import com.rmit.demo.model.SaleDetail;
 import com.rmit.demo.model.SaleInvoice;
+import com.rmit.demo.model.Staff;
+import com.rmit.demo.repository.CustomerRepository;
 import com.rmit.demo.repository.SaleDetailRepository;
 import com.rmit.demo.repository.SaleInvoiceRepository;
+import com.rmit.demo.repository.StaffRepository;
 import com.rmit.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +35,12 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
 
     @Autowired
     private SaleDetailRepository saleDetailRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private StaffRepository staffRepository;
 
 
     @Override
@@ -65,15 +75,12 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
 
     @Override
     public SaleInvoice updateOne(int id, SaleInvoice object) {
-        SaleInvoice foundSaleInvoice = saleInvoiceRepository.findById(id).orElse(null);
-        if (foundSaleInvoice != null) {
-            foundSaleInvoice.setDate(object.getDate());
-            foundSaleInvoice.setStaff(object.getStaff());
-            foundSaleInvoice.setCustomer(object.getCustomer());
-            foundSaleInvoice.setTotalValue(object.getTotalValue());
-            return saleInvoiceRepository.saveAndReset(foundSaleInvoice);
-        }
-        return null;
+        SaleInvoice foundSaleInvoice = saleInvoiceRepository.findById(id).orElseThrow(NullPointerException::new);
+        foundSaleInvoice.setDate(object.getDate());
+        foundSaleInvoice.setStaff(object.getStaff());
+        foundSaleInvoice.setCustomer(object.getCustomer());
+        foundSaleInvoice.setTotalValue(object.getTotalValue());
+        return saleInvoiceRepository.saveAndReset(foundSaleInvoice);
     }
 
     @Override
@@ -89,13 +96,32 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
         return saleDetailRepository.findSaleDetailsBySaleInvoice(saleInvoice);
     }
 
+    // FILTER All SaleInvoice in a period of time
     public List<SaleInvoice> filterByPeriod(Date startDate, Date endDate) {
-        // Format Date to String
-        String startDateStr = DateUtils.dateToString(startDate);
-        String endDateStr = DateUtils.dateToString(endDate);
         // Normalized Datetime to the beginning and very end of the date
-        Date normStartDate = DateUtils.parseDatetime(startDateStr + " 00:00:00");
-        Date normEndDate = DateUtils.parseDatetime(endDateStr + " 23:59:59");
+        Date normStartDate = DateUtils.normalizeDateAtStart(startDate);
+        Date normEndDate = DateUtils.normalizeDateAtEnd(endDate);
         return saleInvoiceRepository.findAllByDateBetween(normStartDate, normEndDate);
     }
+
+    // READ ALL SaleInvoice By a Customer in a period
+    public List<SaleInvoice> getAllSaleInvoicesByCustomerAndPeriod(int customerId, Date startDate, Date endDate) {
+        // Find customer
+        Customer customer = customerRepository.findById(customerId).orElseThrow(NullPointerException::new);
+        // Normalized Datetime to the beginning and very end of the date
+        Date normStartDate = DateUtils.normalizeDateAtStart(startDate);
+        Date normEndDate = DateUtils.normalizeDateAtEnd(endDate);
+        return saleInvoiceRepository.findSaleInvoicesByCustomerAndDateBetween(customer, startDate, endDate);
+    }
+
+    public List<SaleInvoice> getAllSaleInvoicesByStaffAndPeriod(int staffId, Date startDate, Date endDate) {
+        // Find customer
+        Staff staff = staffRepository.findById(staffId).orElseThrow(NullPointerException::new);
+        // Normalized Datetime to the beginning and very end of the date
+        Date normStartDate = DateUtils.normalizeDateAtStart(startDate);
+        Date normEndDate = DateUtils.normalizeDateAtEnd(endDate);
+        return saleInvoiceRepository.findSaleInvoicesByStaffAndDateBetween(staff, startDate, endDate);
+    }
+
+
 }

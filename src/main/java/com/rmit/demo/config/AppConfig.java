@@ -37,74 +37,123 @@ public class AppConfig {
     public Product product() {
         return new Product();
     }
+
     @Bean
     public ProductService productService() {
         return new ProductService();
     }
-    @Bean
-    public Customer customer() { return new Customer(); }
-    @Bean
-    public CustomerService customerService() { return new CustomerService(); }
-    @Bean
-    public Provider provider() { return new Provider(); }
-    @Bean
-    public ProviderService providerService() { return new ProviderService(); }
-    @Bean
-    public Staff staff() { return new Staff(); }
-    @Bean
-    public StaffService staffService() { return new StaffService(); }
 
     @Bean
-    public Order order() {return new Order();}
+    public Customer customer() {
+        return new Customer();
+    }
 
     @Bean
-    public OrderDetail orderDetail() {return new OrderDetail();}
+    public CustomerService customerService() {
+        return new CustomerService();
+    }
 
     @Bean
-    public OrderDetailService orderDetailService() {return new OrderDetailService();}
+    public Provider provider() {
+        return new Provider();
+    }
 
     @Bean
-    public OrderService orderService() {return new OrderService();}
+    public ProviderService providerService() {
+        return new ProviderService();
+    }
 
     @Bean
-    public ReceivingNote receivingNote() {return new ReceivingNote();}
+    public Staff staff() {
+        return new Staff();
+    }
 
     @Bean
-    public ReceivingNoteService receivingNoteService() {return new ReceivingNoteService();}
+    public StaffService staffService() {
+        return new StaffService();
+    }
 
     @Bean
-    public ReceiveDetail receiveDetail() {return new ReceiveDetail();}
+    public Order order() {
+        return new Order();
+    }
+
+    @Bean
+    public OrderDetail orderDetail() {
+        return new OrderDetail();
+    }
+
+    @Bean
+    public OrderDetailService orderDetailService() {
+        return new OrderDetailService();
+    }
+
+    @Bean
+    public OrderService orderService() {
+        return new OrderService();
+    }
+
+    @Bean
+    public ReceivingNote receivingNote() {
+        return new ReceivingNote();
+    }
+
+    @Bean
+    public ReceivingNoteService receivingNoteService() {
+        return new ReceivingNoteService();
+    }
+
+    @Bean
+    public ReceiveDetail receiveDetail() {
+        return new ReceiveDetail();
+    }
+
     // Define beans for Category assets
     @Bean
     public Category category() {
         return new Category();
     }
+
     @Bean
     public CategoryService categoryService() {
         return new CategoryService();
     }
 
     @Bean
-    public DeliveryNote deliveryNote() {return new DeliveryNote();}
+    public DeliveryNote deliveryNote() {
+        return new DeliveryNote();
+    }
 
     @Bean
-    public DeliveryNoteService deliveryNoteService() {return new DeliveryNoteService();}
+    public DeliveryNoteService deliveryNoteService() {
+        return new DeliveryNoteService();
+    }
 
     @Bean
-    public DeliveryDetail deliveryDetail() { return new DeliveryDetail();}
+    public DeliveryDetail deliveryDetail() {
+        return new DeliveryDetail();
+    }
 
 
     @Bean
-    public SaleInvoice saleInvoice() {return new SaleInvoice();}
+    public SaleInvoice saleInvoice() {
+        return new SaleInvoice();
+    }
 
     @Bean
-    public SaleInvoiceService saleInvoiceService() {return new SaleInvoiceService();}
+    public SaleInvoiceService saleInvoiceService() {
+        return new SaleInvoiceService();
+    }
 
     @Bean
-    public SaleDetail saleDetail() {return new SaleDetail();}
+    public SaleDetail saleDetail() {
+        return new SaleDetail();
+    }
 
-
-
+    @Bean
+    public StatsService statsService() {
+        return new StatsService();
+    }
 
 
     @Autowired

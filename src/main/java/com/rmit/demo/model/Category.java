@@ -1,21 +1,18 @@
 package com.rmit.demo.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
-@Table(name="category")
+@Table(name = "category")
 public class Category {
 
     @Id
     @Column
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -26,16 +23,10 @@ public class Category {
     private List<Product> products;
 
 
-    public List<Product> getProducts() {
-        return products;
+    public Category() {
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-
-    public Category() {};
+    ;
 
     public Category(int id, String name) {
         super();
@@ -61,5 +52,14 @@ public class Category {
 
     public void setAll(Category category) {
         this.name = category.getName();
+    }
+
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

@@ -1,8 +1,12 @@
 package com.rmit.demo.service;
+
 import com.rmit.demo.model.Category;
 import com.rmit.demo.model.Product;
 import com.rmit.demo.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,51 +15,50 @@ import java.util.List;
 
 @Transactional
 @Service
-public class CategoryService {
+public class CategoryService implements CrudService<Category> {
+
     @Autowired
     private CategoryRepository categoryRepository;
 
     // READ All Categories
-    public List<Category> getAllCategories() {
+    public List<Category> getAll() {
         var it = categoryRepository.findAll();
-        var categories = new ArrayList<Category>();
 
-        it.forEach(categories::add);
-
-        return categories;
+        return new ArrayList<Category>(it);
     }
+
+    // READ ALL Category by Pagination
+    public List<Category> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Category> allCategories = categoryRepository.findAll(pageable);
+        if (allCategories.hasContent()) {
+            return allCategories.getContent();
+        }
+        return new ArrayList<Category>();
+    }
+
     // READ One Category
-    public Category getOneCategory(int id) {
+    public Category getOne(int id) {
         return categoryRepository.findById(id).orElse(null);
     }
 
     // CREATE One Category
-    public int saveCategory(Category category) {
-        categoryRepository.save(category);
-        return category.getId();
+    public Category saveOne(Category category) {
+        return categoryRepository.saveAndReset(category);
     }
 
     // UPDATE One Category
-    public int updateCategory(int categoryId, Category category) {
-        Category c = categoryRepository.findById(categoryId).orElse(null);
-        if (c != null) {
-            c.setAll(category);
-            categoryRepository.save(c);
-            return categoryId;
-        }
-        return -1;
+    public Category updateOne(int categoryId, Category category) {
+        Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
+        c.setAll(category);
+        categoryRepository.saveAndReset(c);
+        return c;
     }
 
     // DELETE One Category
-    public int deleteCategory(int categoryId) {
-         Category c = categoryRepository.findById(categoryId).orElse(null);
-        if (c != null) {
-            for (Product product: c.getProducts()) {
-                product.setCategory(null);
-            }
-            categoryRepository.delete(c);
-            return categoryId;
-        }
-        return -1;
+    public int deleteOne(int categoryId) {
+        Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
+        categoryRepository.delete(c);
+        return c.getId();
     }
 }

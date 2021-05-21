@@ -69,7 +69,7 @@ public class SaleInvoiceController implements CrudController<SaleInvoice> {
     }
 
     // READ ALL SaleDetail of a SaleInvoice
-    @RequestMapping(path="{id}/sale-details", method = RequestMethod.GET)
+    @RequestMapping(path = "/{id}/sale-details", method = RequestMethod.GET)
     public ResponseEntity<Object> getAllSaleDetailsBySaleInvoice(@PathVariable int id) {
         List<SaleDetail> saleDetailList = saleInvoiceService.getAllSaleDetailsBySaleInvoice(id);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/sale-invoices/%d/sale-details", id),
@@ -77,12 +77,40 @@ public class SaleInvoiceController implements CrudController<SaleInvoice> {
     }
 
     // FILTER SaleInvoices by startDate and endDate (dd-MM-yyyy)
-    @RequestMapping(path = "filter", method = RequestMethod.GET, params = {"startDate", "endDate"})
+    @RequestMapping(path = "/filter", method = RequestMethod.GET, params = {"startDate", "endDate"})
     public ResponseEntity<Object> filterByDate(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate, @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate) {
         List<SaleInvoice> saleInvoiceList = saleInvoiceService.filterByPeriod(startDate, endDate);
         String startDateStr = DateUtils.dateToString(startDate);
         String endDateStr = DateUtils.dateToString(endDate);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, String.format("/sale-invoices/filter?startDate=%s&endDate=%s", startDateStr, endDateStr),
-                String.format("All SaleInvoices between %s and %s fetched successfully.", startDateStr, endDateStr),saleInvoiceList);
+                String.format("All SaleInvoices between %s and %s fetched successfully.", startDateStr, endDateStr), saleInvoiceList);
     }
+
+    // READ ALL SaleInvoice By a Customer in a period
+    @RequestMapping(path = "/by-customer/{id}/filter", method = RequestMethod.GET, params = {"startDate", "endDate"})
+    public ResponseEntity<Object> getAllSaleInvoicesByCustomerAndPeriod(@PathVariable int id,
+                                                                        @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+                                                                        @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate) {
+        String startDateStr = DateUtils.dateToString(startDate);
+        String endDateStr = DateUtils.dateToString(endDate);
+        List<SaleInvoice> saleInvoiceList = saleInvoiceService.getAllSaleInvoicesByCustomerAndPeriod(id, startDate, endDate);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true,
+                String.format("/sale-invoices/by-customer/%d/filter?startDate=%s&endDate=%s", id, startDateStr, endDateStr),
+                String.format("All SaleInvoice by Customer %d between %s and %s fetched successfully.", id, startDateStr, endDateStr), saleInvoiceList);
+    }
+
+    // READ ALL SaleInvoice By a Staff in a period
+    @RequestMapping(path = "/by-staff/{id}/filter", method = RequestMethod.GET, params = {"startDate", "endDate"})
+    public ResponseEntity<Object> getAllSaleInvoicesByStaffAndPeriod(@PathVariable int id,
+                                                                     @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+                                                                     @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate) {
+        String startDateStr = DateUtils.dateToString(startDate);
+        String endDateStr = DateUtils.dateToString(endDate);
+        List<SaleInvoice> saleInvoiceList = saleInvoiceService.getAllSaleInvoicesByStaffAndPeriod(id, startDate, endDate);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true,
+                String.format("/sale-invoices/by-staff/%d/filter?startDate=%s&endDate=%s", id, startDateStr, endDateStr),
+                String.format("All SaleInvoice by Staff %d between %s and %s fetched successfully.", id, startDateStr, endDateStr), saleInvoiceList);
+    }
+
+
 }

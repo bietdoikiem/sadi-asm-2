@@ -64,11 +64,4 @@ public class ProductController implements CrudController<Product> {
                 String.format("Product %d deleted successfully", deletedId), null);
     }
 
-
-    // READ specific products on conditions (Find all Converts)
-    @RequestMapping(path = "converts/find", method = RequestMethod.GET)
-    public ResponseEntity<Object> getConverts() {
-        List<Product> listOfConverts = productService.getConverts();
-        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/products/converts/find", "All Convert Products fetched successfully.", listOfConverts);
-    }
 }
