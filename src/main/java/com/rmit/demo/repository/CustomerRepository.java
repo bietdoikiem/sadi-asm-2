@@ -15,6 +15,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer>, J
     ArrayList<Customer> findAllByName(String name);
     ArrayList<Customer> findAllByAddress(String address);
     ArrayList<Customer> findAllByPhone(String phone);
+    Customer findByName(String name);
     Customer findByAddress(String address);
     Customer findByPhone(String phone);
 }
