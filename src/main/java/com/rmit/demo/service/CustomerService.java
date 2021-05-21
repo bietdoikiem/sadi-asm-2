@@ -35,6 +35,6 @@ public class CustomerService {
     }
 
     public Customer getOne(int id) {
-        return customerRepository.findById(id);
+        return customerRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 }

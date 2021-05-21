@@ -33,12 +33,9 @@ public class OrderController {
     //GET BY ID
     @RequestMapping(path = "{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> getOrderById(@PathVariable int id) {
-        try {
-            Order order = orderService.getOrderById(id);
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/orders/" + order.getId(), String.format("Order %d fetched successfully.", order.getId()), order);
-        } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/orders/" + id, String.format("Order %d not found.", id), new HashMap());
-        }
+        Order order = orderService.getOrderById(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/orders/" + order.getId(), String.format("Order %d fetched successfully.", order.getId()), order);
+
     }
 
     // ADD
