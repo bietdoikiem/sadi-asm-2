@@ -16,7 +16,6 @@ import java.util.List;
 public class CategoryController implements CrudController<Category> {
 
     private CategoryService categoryService;
-
     @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
