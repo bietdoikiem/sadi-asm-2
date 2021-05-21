@@ -10,7 +10,6 @@ import com.rmit.demo.model.Staff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -104,8 +103,11 @@ public class AppConfig {
     }
 
     @Bean
-    public ReceiveDetail receiveDetail() {
-        return new ReceiveDetail();
+    public ReceiveDetail receiveDetail() {return new ReceiveDetail();}
+
+    @Bean
+    public ReceiveDetailService receiveDetailService() {
+        return new ReceiveDetailService();
     }
 
     // Define beans for Category assets
@@ -154,7 +156,6 @@ public class AppConfig {
     public StatsService statsService() {
         return new StatsService();
     }
-
 
     @Autowired
     private Environment env;

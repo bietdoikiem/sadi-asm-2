@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,10 +20,14 @@ public class Order {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
 
-    /*@Column
-        private Staff staff;
-        @Column
-        private Provider provider;*/
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "staff_id", referencedColumnName = "id")
+    private Staff staff;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "provider_id", referencedColumnName = "id")
+    private Provider provider;
+
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
     private List<OrderDetail> orderDetails;
@@ -32,11 +35,12 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, Date date/*, String stringDate, Staff staff, Provider provider, OrderDetail orderDetail*/) {
+    public Order(int id, Date date, Staff staff, Provider provider, List<OrderDetail> orderDetails) {
         this.id = id;
         this.date = date;
-        /*this.staff = staff;
-        this.provider = provider;*/
+        this.staff = staff;
+        this.provider = provider;
+        this.orderDetails = orderDetails;
     }
 
 
@@ -66,7 +70,7 @@ public class Order {
     }
 
 
-    /*public Staff getStaff() {
+    public Staff getStaff() {
         return staff;
     }
 
@@ -80,7 +84,7 @@ public class Order {
 
     public void setProvider(Provider provider) {
         this.provider = provider;
-    }*/
+    }
 
 
 }
