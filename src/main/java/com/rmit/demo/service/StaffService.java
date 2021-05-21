@@ -35,6 +35,6 @@ public class StaffService {
     }
 
     public Staff getOne(int id) {
-        return staffRepository.findById(id);
+        return staffRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 }

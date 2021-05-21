@@ -1,14 +1,13 @@
-package com.rmit.demo.repository;
+package com.rmit.demo.repository.impl;
 
+<<<<<<< HEAD:src/main/java/com/rmit/demo/repository/CustomerRepositoryImpl.java
+=======
 import com.rmit.demo.model.Customer;
+import com.rmit.demo.repository.CustomerRepositoryCustom;
+>>>>>>> origin/invoice-feat:src/main/java/com/rmit/demo/repository/impl/CustomerRepositoryImpl.java
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 @Service
 public class CustomerRepositoryImpl implements CustomerRepositoryCustom {

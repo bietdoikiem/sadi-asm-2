@@ -19,13 +19,24 @@ public class ResponseHandler {
             map.put("data", responseObj);
 
             return new ResponseEntity<Object>(map, status);
-        } catch (Exception e) {
+        } catch(NullPointerException e) {
+            map.clear();
+            map.put("timestamp", new Date());
+            map.put("status", HttpStatus.NOT_FOUND);
+            map.put("isSuccess", false);
+            map.put("message", e.getMessage());
+            map.put("data", null);
+            System.out.println("NOT NULL ERROR");
+            return new ResponseEntity<Object>(map, status);
+        }
+        catch (Exception e) {
             map.clear();
             map.put("timestamp", new Date());
             map.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
             map.put("isSuccess", false);
             map.put("message", e.getMessage());
             map.put("data", null);
+            System.out.println("ERROR");
             return new ResponseEntity<Object>(map, status);
         }
     }

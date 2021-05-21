@@ -11,7 +11,6 @@ import java.util.List;
 @Transactional
 public interface StaffRepository extends CrudRepository<Staff, Integer>, StaffRepositoryCustom {
     Staff findByName(String name);
-    Staff findById(int id);
     Staff findByAddress(String address);
     Staff findByPhone(String phone);
 }

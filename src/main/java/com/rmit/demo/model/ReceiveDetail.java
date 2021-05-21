@@ -1,12 +1,31 @@
 package com.rmit.demo.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "receive_detail")
 public class ReceiveDetail {
+
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "receiving_note_id", referencedColumnName = "id")
+    private ReceivingNote receivingNote;
+
+    @Column
     private int quantity;
 
     public ReceiveDetail() {}
 
-    public ReceiveDetail(Product product, int quantity) {
+    public ReceiveDetail(int id, Product product, int quantity) {
+        this.id = id;
         this.product = product;
         this.quantity = quantity;
     }
@@ -27,4 +46,19 @@ public class ReceiveDetail {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setAll (ReceiveDetail receiveDetail) {
+        this.id = receiveDetail.getId();
+        this.product = receiveDetail.getProduct();
+        this.quantity = receiveDetail.getQuantity();
+    }
+
 }

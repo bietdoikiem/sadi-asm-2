@@ -1,12 +1,15 @@
 package com.rmit.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name="receive_note")
+@Table(name="receiving_note")
 public class ReceivingNote {
 
     @Id
@@ -14,19 +17,24 @@ public class ReceivingNote {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     @Column
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
-    /*@Column
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "staff_id", referencedColumnName = "id")
     private Staff staff;
-    @Column
-    private ReceiveDetail receiveDetail;*/
+
+    @OneToMany(mappedBy = "receivingNote", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
+    private List<ReceiveDetail> receiveDetail;
 
     public ReceivingNote() {}
 
-    public ReceivingNote(int id, Date date/*, Staff staff, OrderDetail orderDetail*/) {
+    public ReceivingNote(int id, Date date, Staff staff, List<ReceiveDetail> receiveDetail) {
         this.id = id;
         this.date = date;
-        /*this.staff = staff;
-        this.orderDetail = orderDetail;*/
+        this.staff = staff;
+        this.receiveDetail = receiveDetail;
     }
 
 
@@ -46,7 +54,7 @@ public class ReceivingNote {
         this.date = date;
     }
 
-    /*public Staff getStaff() {
+    public Staff getStaff() {
         return staff;
     }
 
@@ -54,13 +62,20 @@ public class ReceivingNote {
         this.staff = staff;
     }
 
-    public OrderDetail getOrderDetail() {
-        return orderDetail;
+    public List<ReceiveDetail> getReceiveDetail() {
+        return receiveDetail;
     }
 
-    public void setOrderDetail(OrderDetail orderDetail) {
-        this.orderDetail = orderDetail;
-    }*/
+    public void setReceiveDetail(List<ReceiveDetail> receiveDetail) {
+        this.receiveDetail = receiveDetail;
+    }
 
+    public void setAll(ReceivingNote receivingNote) {
+        this.id = receivingNote.getId();
+        this.date = receivingNote.getDate();
+        this.staff = receivingNote.getStaff();
+        this.receiveDetail = receivingNote.getReceiveDetail();
+
+    }
 
 }

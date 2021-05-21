@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
     List<Product> brandFind(String brand);
+    Product saveAndReset(Product product);
 }
