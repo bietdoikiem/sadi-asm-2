@@ -1,4 +1,5 @@
 package com.rmit.demo.service;
+
 import com.rmit.demo.model.Customer;
 import com.rmit.demo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,7 @@ public class CustomerService {
 
     // Get all customers
     public ArrayList<Customer> getAllCustomers() {
-        ArrayList<Customer> customers = new ArrayList<>();
-        customerRepository.findAll().forEach(customers::add);
-        return customers;
+        return new ArrayList<>(customerRepository.findAll());
     }
 
     // Get all customers by name
