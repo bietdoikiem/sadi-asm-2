@@ -34,7 +34,6 @@ public class ProductController implements CrudController<Product> {
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/products", String.format("Products (page %d - size %d) fetched successfully.", page, size), listOfProducts);
     }
 
-
     // READ one Product
     public ResponseEntity<Object> getOne(@PathVariable int id) {
         Product product = productService.getOne(id);
