@@ -45,9 +45,7 @@ public class CustomerService {
 
     // Get all customers
     public ArrayList<Customer> getAllCustomers() {
-        ArrayList<Customer> customers = new ArrayList<>();
-        customerRepository.findAll().forEach(customers::add);
-        return customers;
+        return new ArrayList<>(customerRepository.findAll());
     }
 
     // Get all customers by name
@@ -77,9 +75,8 @@ public class CustomerService {
     public ArrayList<Customer> getAllCustomers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Customer> allCustomers = customerRepository.findAll(pageable);
-        if (allCustomers.hasContent()) {
+        if(allCustomers.hasContent())
             return new ArrayList<>(allCustomers.getContent());
-        }
         return new ArrayList<>();
     }
 }

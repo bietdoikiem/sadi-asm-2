@@ -75,9 +75,8 @@ public class ProviderService {
     public ArrayList<Provider> getAllProviders(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Provider> allProvider = providerRepository.findAll(pageable);
-        if(allProvider.hasContent()) {
+        if(allProvider.hasContent())
             return new ArrayList<>(allProvider.getContent());
-        }
         return new ArrayList<>();
     }
 }
