@@ -86,12 +86,10 @@ public class DeliveryNoteService implements CrudService<DeliveryNote> {
 
     // FILTER DeliveryNote Between startDate and endDate
     public List<DeliveryNote> filterByPeriod(Date startDate, Date endDate) {
-        // Format Date to String
-        String startDateStr = DateUtils.dateToString(startDate);
-        String endDateStr = DateUtils.dateToString(endDate);
-        // Normalized Datetime to the beginning and very end of the date
-        Date normStartDate = DateUtils.parseDatetime(startDateStr + " 00:00:00");
-        Date normEndDate = DateUtils.parseDatetime(endDateStr + " 23:59:59");
+        // Normalize date to the beginning of the date (00:00:00)
+        Date normStartDate = DateUtils.normalizeDateAtStart(startDate);
+        // Normalize date to the end of teh date (23:59:59)
+        Date normEndDate = DateUtils.normalizeDateAtEnd(endDate);
         return deliveryNoteRepository.findAllByDateBetween(normStartDate, normEndDate);
     }
 

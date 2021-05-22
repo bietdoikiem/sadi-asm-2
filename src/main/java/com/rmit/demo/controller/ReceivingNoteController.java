@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/receivingNotes")
+@RequestMapping(path="/receiving-notes")
 public class ReceivingNoteController {
 
     private ReceivingNoteService receivingNoteService;

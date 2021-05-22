@@ -59,6 +59,9 @@ public class CategoryService implements CrudService<Category> {
     public int deleteOne(int categoryId) {
         Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
         categoryRepository.delete(c);
+        for (Product product: c.getProducts()) {
+            product.setCategory(null);
+        }
         return c.getId();
     }
 }

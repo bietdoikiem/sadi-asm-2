@@ -5,6 +5,7 @@ import com.rmit.demo.model.ReceiveDetail;
 import com.rmit.demo.model.ReceivingNote;
 import com.rmit.demo.repository.OrderRepository;
 import com.rmit.demo.repository.ReceivingNoteRepository;
+import com.rmit.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +37,11 @@ public class ReceivingNoteService {
         return receivingNotes;
     }
 
-    // Create receiving note
+    // Create receiving note along with receiving details
     public ReceivingNote saveReceivingNote(ReceivingNote receivingNote) {
+        for (ReceiveDetail receiveDetail: receivingNote.getReceiveDetailList()) {
+            receiveDetail.setReceivingNote(receivingNote);
+        }
         return receivingNoteRepository.save(receivingNote);
     }
 
@@ -63,8 +67,10 @@ public class ReceivingNoteService {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         sdf.setLenient(false);
 
-        Date parsedStart = sdf.parse(startDate);
-        Date parsedEnd = sdf.parse(endDate);
+//        Date parsedStart = sdf.parse(startDate);
+//        Date parsedEnd = sdf.parse(endDate);
+        Date parsedStart = sdf.parse(startDate + " 00:00:00");
+        Date parsedEnd = sdf.parse(endDate + " 23:59:59");
 
         ArrayList<ReceivingNote> receivingNotes = new ArrayList<>();
         receivingNoteRepository.findAll().forEach(receivingNotes::add);
