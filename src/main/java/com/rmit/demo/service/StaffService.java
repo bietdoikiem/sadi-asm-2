@@ -31,7 +31,7 @@ public class StaffService {
             existingStaff.setEmail(staff.getEmail());
             existingStaff.setName(staff.getName());
             existingStaff.setPhone(staff.getPhone());
-            staffRepository.save(existingStaff);
+            return staffRepository.save(existingStaff);
         }
         return null;
     }
