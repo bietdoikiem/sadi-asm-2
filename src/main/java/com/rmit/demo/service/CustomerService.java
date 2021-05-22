@@ -1,4 +1,5 @@
 package com.rmit.demo.service;
+
 import com.rmit.demo.model.Customer;
 import com.rmit.demo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class CustomerService {
     // Update one customer
     public Customer updateCustomer(int id, Customer customer) {
         Customer existingCustomer = customerRepository.findById(id).orElse(null);
-        if (existingCustomer != null) {
+        if(existingCustomer != null) {
             existingCustomer.setId(id);
             existingCustomer.setContactPerson(customer.getContactPerson());
             existingCustomer.setPhone(customer.getPhone());
