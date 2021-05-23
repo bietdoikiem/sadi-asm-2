@@ -2,6 +2,7 @@ package com.rmit.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.persistence.*;
@@ -24,17 +25,17 @@ public class ReceivingNote {
     @JoinColumn(name = "staff_id", referencedColumnName = "id")
     private Staff staff;
 
-    @OneToMany(mappedBy = "receivingNote", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonIgnore
-    private List<ReceiveDetail> receiveDetail;
+    @OneToMany(mappedBy = "receivingNote", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<ReceiveDetail> receiveDetailList;
 
     public ReceivingNote() {}
 
-    public ReceivingNote(int id, Date date, Staff staff, List<ReceiveDetail> receiveDetail) {
+    public ReceivingNote(int id, Date date, Staff staff, List<ReceiveDetail> receiveDetailList) {
         this.id = id;
         this.date = date;
         this.staff = staff;
-        this.receiveDetail = receiveDetail;
+        this.receiveDetailList = receiveDetailList;
     }
 
 
@@ -62,19 +63,19 @@ public class ReceivingNote {
         this.staff = staff;
     }
 
-    public List<ReceiveDetail> getReceiveDetail() {
-        return receiveDetail;
+    public List<ReceiveDetail> getReceiveDetailList() {
+        return receiveDetailList;
     }
 
-    public void setReceiveDetail(List<ReceiveDetail> receiveDetail) {
-        this.receiveDetail = receiveDetail;
+    public void setReceiveDetailList(List<ReceiveDetail> receiveDetailList) {
+        this.receiveDetailList = receiveDetailList;
     }
 
     public void setAll(ReceivingNote receivingNote) {
         this.id = receivingNote.getId();
         this.date = receivingNote.getDate();
         this.staff = receivingNote.getStaff();
-        this.receiveDetail = receivingNote.getReceiveDetail();
+        this.receiveDetailList = receivingNote.getReceiveDetailList();
 
     }
 

@@ -2,6 +2,7 @@ package com.rmit.demo.controller;
 
 import com.rmit.demo.model.Order;
 import com.rmit.demo.model.OrderDetail;
+import com.rmit.demo.model.Product;
 import com.rmit.demo.service.OrderDetailService;
 import com.rmit.demo.service.OrderService;
 import com.rmit.demo.utils.ResponseHandler;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/order-details")
-public class OrderDetailController {
+public class OrderDetailController implements CrudController<OrderDetail>{
 
     private OrderDetailService orderDetailService;
 
@@ -23,34 +24,40 @@ public class OrderDetailController {
         this.orderDetailService = orderDetailService;
     }
 
-    // READ ALL
-    @RequestMapping(path = "", method = RequestMethod.GET)
-    public ResponseEntity<List<OrderDetail>> getAllOrderDetails() {
+    // Get all order details
+    @Override
+    public ResponseEntity<Object> getAll() {
         return new ResponseEntity<>(orderDetailService.getAllOrderDetails(), HttpStatus.OK);
     }
 
-    // READ ONE
-    @RequestMapping(path = "{id}", method = RequestMethod.GET)
-    public ResponseEntity<OrderDetail> getOrderDetailById(@PathVariable int id) {
+    @Override
+    public ResponseEntity<Object> getAll(int page, int size) {
+        List<OrderDetail> listOfOrderDetails = orderDetailService.getAll(page, size);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/order-details", String.format("Order details (page %d - size %d) fetched successfully.", page, size), listOfOrderDetails);
+    }
+
+    // Get one order detail by id
+    @Override
+    public ResponseEntity<Object> getOne(int id) {
         return new ResponseEntity<>(orderDetailService.getOrderDetailById(id), HttpStatus.OK);
     }
 
-    // CREATE ONE
-    @RequestMapping(path = "", method = RequestMethod.POST)
-    public ResponseEntity<OrderDetail> saveOrderDetail(@RequestBody OrderDetail orderDetail) {
+    // Create an order detail
+    @Override
+    public ResponseEntity<Object> saveOne(OrderDetail orderDetail) {
         return new ResponseEntity<>(orderDetailService.saveOrderDetail(orderDetail), HttpStatus.OK);
     }
 
-    // Do UPDATE Here
-    @RequestMapping(path = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> updateOrderDetail(@PathVariable int id, @RequestBody OrderDetail orderDetail) {
+    // Update order detail
+    @Override
+    public ResponseEntity<Object> updateOne(int id, OrderDetail orderDetail) {
         OrderDetail updatedOrderDetail = orderDetailService.updateOrderDetail(id, orderDetail);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/order-details/" + orderDetail.getId(), String.format("Order detail %d updated successfully.", updatedOrderDetail.getId()), updatedOrderDetail);
     }
 
-    // Do DELETE Here
-    @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteOrderDetail(@PathVariable int id) {
+    // Delete order detail
+    @Override
+    public ResponseEntity<Object> deleteOne(int id) {
         orderDetailService.deleteOrderDetail(id);
         return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, "/order-details/" + id, String.format("Order detail %d deleted successfully.", id), null);
     }

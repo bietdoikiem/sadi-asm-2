@@ -31,9 +31,9 @@ public class ProviderController implements CrudController<Provider>{
     public ResponseEntity<Object> getOne(@PathVariable("id") int id){
         try {
             Provider provider = providerService.getOne(id);
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/providers/" + provider.getId(), String.format("Provider %d fetched successfully.", provider.getId()), provider);
+            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/providers/" + provider.getId(), String.format("Provider with the id %d fetched successfully.", provider.getId()), provider);
         } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/providers/" + id, String.format("Provider %d not found.", id), new HashMap());
+            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/providers/" + id, String.format("Provider with the id %d not found.", id), new HashMap());
         }
     }
 

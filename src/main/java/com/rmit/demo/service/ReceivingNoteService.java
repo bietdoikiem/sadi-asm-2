@@ -1,11 +1,17 @@
 package com.rmit.demo.service;
 
 import com.rmit.demo.model.Order;
+import com.rmit.demo.model.Product;
 import com.rmit.demo.model.ReceiveDetail;
 import com.rmit.demo.model.ReceivingNote;
 import com.rmit.demo.repository.OrderRepository;
+import com.rmit.demo.repository.ReceiveDetailRepository;
 import com.rmit.demo.repository.ReceivingNoteRepository;
+import com.rmit.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +28,9 @@ public class ReceivingNoteService {
     @Autowired
     private ReceivingNoteRepository receivingNoteRepository;
 
+    @Autowired
+    private ReceiveDetailRepository receiveDetailRepository;
+
     //get a receive note by id
     public ReceivingNote getReceivingNoteById(int id) {
         return receivingNoteRepository.findById(id).orElse(null);
@@ -36,8 +45,24 @@ public class ReceivingNoteService {
         return receivingNotes;
     }
 
+    // READ ALL receiving note Pagination
+    public List<ReceivingNote> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ReceivingNote> allReceivingNotes = receivingNoteRepository.findAll(pageable);
+
+        if (allReceivingNotes.hasContent()) {
+            return allReceivingNotes.getContent();
+        }
+        return new ArrayList<>();
+
+    }
+
     // Create receiving note
+    // Create receiving note along with receiving details
     public ReceivingNote saveReceivingNote(ReceivingNote receivingNote) {
+        for (ReceiveDetail receiveDetail: receivingNote.getReceiveDetailList()) {
+            receiveDetail.setReceivingNote(receivingNote);
+        }
         return receivingNoteRepository.save(receivingNote);
     }
 
@@ -62,9 +87,8 @@ public class ReceivingNoteService {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         sdf.setLenient(false);
-
-        Date parsedStart = sdf.parse(startDate);
-        Date parsedEnd = sdf.parse(endDate);
+        Date parsedStart = sdf.parse(startDate + " 00:00:00");
+        Date parsedEnd = sdf.parse(endDate + " 23:59:59");
 
         ArrayList<ReceivingNote> receivingNotes = new ArrayList<>();
         receivingNoteRepository.findAll().forEach(receivingNotes::add);
@@ -76,5 +100,10 @@ public class ReceivingNoteService {
             }
         }
         return filteredReceivingNote;
+    }
+
+    public List<ReceiveDetail> getReceiveDetailListByReceivingNote(int receivingNoteId) {
+        ReceivingNote receivingNote = receivingNoteRepository.findById(receivingNoteId).orElseThrow(NullPointerException::new);
+        return receiveDetailRepository.findReceiveDetailsByReceivingNote(receivingNote);
     }
 }

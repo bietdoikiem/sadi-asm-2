@@ -47,7 +47,7 @@ public class DeliveryNoteController implements CrudController<DeliveryNote> {
     // CREATE One DeliveryNote
     public ResponseEntity<Object> saveOne(@RequestBody DeliveryNote deliveryNote) {
         DeliveryNote savedNote = deliveryNoteService.saveOne(deliveryNote);
-        return ResponseHandler.generateResponse(HttpStatus.CREATED, true, "/delivery-notes/" + deliveryNote.getId(),
+        return ResponseHandler.generateResponse(HttpStatus.CREATED, true, "/delivery-notes",
                 String.format("DeliveryNote %d created successfully.", savedNote.getId()), savedNote);
     }
 

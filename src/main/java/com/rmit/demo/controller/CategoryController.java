@@ -16,6 +16,7 @@ import java.util.List;
 public class CategoryController implements CrudController<Category> {
 
     private CategoryService categoryService;
+
     @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -51,7 +52,7 @@ public class CategoryController implements CrudController<Category> {
     public ResponseEntity<Object> saveOne(@RequestBody Category category) {
         Category savedOne = categoryService.saveOne(category);
         return ResponseHandler.generateResponse(HttpStatus.CREATED, true,
-                "/categories/" + savedOne.getId(),
+                "/categories",
                 String.format("Category %d created successfully.", savedOne.getId()),
                 savedOne);
     }

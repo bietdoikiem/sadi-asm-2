@@ -50,7 +50,7 @@ public class SaleInvoiceController implements CrudController<SaleInvoice> {
     @Override
     public ResponseEntity<Object> saveOne(SaleInvoice object) {
         SaleInvoice savedInvoice = saleInvoiceService.saveOne(object);
-        return ResponseHandler.generateResponse(HttpStatus.CREATED, true, "/sale-invoices/" + savedInvoice.getId(),
+        return ResponseHandler.generateResponse(HttpStatus.CREATED, true, "/sale-invoices",
                 String.format("SaleInvoice %d created successfully.", savedInvoice.getId()), savedInvoice);
     }
 

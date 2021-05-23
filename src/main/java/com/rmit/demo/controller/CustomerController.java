@@ -31,9 +31,9 @@ public class CustomerController implements CrudController<Customer>{
     public ResponseEntity<Object> getOne(@PathVariable int id) {
         try {
             Customer customer = customerService.getOne(id);
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/customers/" + customer.getId(), String.format("Customer %d fetched successfully.", customer.getId()), customer);
+            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/customers/" + customer.getId(), String.format("Customer with the id %d fetched successfully.", customer.getId()), customer);
         } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/customers/" + id, String.format("Customer %d not found.", id), new HashMap());
+            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/customers/" + id, String.format("Customer with the id %d not found.", id), new HashMap());
         }
     }
 

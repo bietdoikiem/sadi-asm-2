@@ -2,6 +2,7 @@ package com.rmit.demo.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rmit.demo.model.Order;
+import com.rmit.demo.model.Product;
 import com.rmit.demo.model.Provider;
 import com.rmit.demo.service.OrderService;
 import com.rmit.demo.utils.ResponseHandler;
@@ -15,7 +16,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(path = "/orders")
-public class OrderController {
+public class OrderController implements CrudController<Order>{
 
     private OrderService orderService;
 
@@ -24,45 +25,51 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // GET ALL
-    @RequestMapping(path = "", method = RequestMethod.GET)
-    public ResponseEntity<Object> getAllOrders() {
+    // Filter by Date
+    @RequestMapping(value="/filter", method = RequestMethod.GET)
+    public ArrayList<Order> filterByStartAndEndDate(@RequestParam String startDate, @RequestParam String endDate) throws ParseException {
+        return orderService.getOrdersByStartDateAndEndDate(startDate, endDate);
+    }
+
+    // Get all order
+    @Override
+    public ResponseEntity<Object> getAll() {
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/orders", "All Orders fetched successfully.", orderService.getAllOrders());
     }
 
-    //GET BY ID
-    @RequestMapping(path = "{id}", method = RequestMethod.GET)
-    public ResponseEntity<Object> getOrderById(@PathVariable int id) {
-        Order order = orderService.getOrderById(id);
-        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/orders/" + order.getId(), String.format("Order %d fetched successfully.", order.getId()), order);
-
+    // Get all order by pagination
+    @Override
+    public ResponseEntity<Object> getAll(@RequestParam int page, @RequestParam int size) {
+        List<Order> listOfOrders = orderService.getAll(page, size);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/orders", String.format("Orders (page %d - size %d) fetched successfully.", page, size), listOfOrders);
     }
 
-    // ADD
-    @RequestMapping(path = "", method = RequestMethod.POST)
-    public ResponseEntity<Object> addOrder(@RequestBody Order order) {
+    // Get one order by id
+    @Override
+    public ResponseEntity<Object> getOne(int id) {
+        Order order = orderService.getOrderById(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/orders/" + order.getId(), String.format("Order %d fetched successfully.", order.getId()), order);
+    }
+
+    // Add an order
+    @Override
+    public ResponseEntity<Object> saveOne(Order order) {
         Order savedOrder = orderService.saveOrder(order);
         return ResponseHandler.generateResponse(HttpStatus.CREATED, true, "/orders/" + savedOrder.getId(), String.format("Order %d created successfully.", savedOrder.getId())
                 , savedOrder);
     }
 
-    // UPDATE
-    @RequestMapping(path = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> updateOrder(@PathVariable int id, @RequestBody Order order) {
+    // Update
+    @Override
+    public ResponseEntity<Object> updateOne(int id, Order order) {
         Order updatedOrder = orderService.updateOrder(id, order);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/orders/" + order.getId(), String.format("Order %d updated successfully.", updatedOrder.getId()), updatedOrder);
     }
 
-    // DELETE
-    @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteOrder(@PathVariable int id) {
+    // Delete order
+    @Override
+    public ResponseEntity<Object> deleteOne(int id) {
         orderService.deleteOrder(id);
         return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, "/orders/" + id, String.format("Order %d deleted successfully.", id), null);
-    }
-
-    // Filter by Date
-    @RequestMapping(value="/filter", method = RequestMethod.GET)
-    public ArrayList<Order> filterByStartAndEndDate(@RequestParam String startDate, @RequestParam String endDate) throws ParseException {
-        return orderService.getOrdersByStartDateAndEndDate(startDate, endDate);
     }
 }
