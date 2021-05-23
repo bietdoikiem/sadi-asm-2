@@ -5,6 +5,9 @@ import com.rmit.demo.model.Product;
 import com.rmit.demo.model.Provider;
 import com.rmit.demo.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,18 @@ public class OrderService {
         it.forEach(orders::add);
 
         return orders;
+    }
+
+    // READ ALL Order Pagination
+    public List<Order> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> allOrders = orderRepository.findAll(pageable);
+
+        if (allOrders.hasContent()) {
+            return allOrders.getContent();
+        }
+        return new ArrayList<>();
+
     }
 
     // Get a order

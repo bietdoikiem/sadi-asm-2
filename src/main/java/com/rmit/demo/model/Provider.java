@@ -1,8 +1,10 @@
 package com.rmit.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="provider")
@@ -11,6 +13,10 @@ public class Provider extends Person {
     private String fax;
     @Column
     private String contactPerson;
+
+    @OneToMany(mappedBy = "provider", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
+    private List<Order> order;
 
     public Provider() {}
 
