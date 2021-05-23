@@ -25,7 +25,7 @@ public class ProviderService {
     // Update one provider
     public Provider updateProvider(int id, Provider provider) {
         Provider existingProvider = providerRepository.findById(id).orElse(null);
-        if (existingProvider != null) {
+        if(existingProvider != null) {
             existingProvider.setId(id);
             existingProvider.setContactPerson(provider.getContactPerson());
             existingProvider.setPhone(provider.getPhone());
@@ -75,9 +75,8 @@ public class ProviderService {
     public ArrayList<Provider> getAllProviders(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Provider> allProvider = providerRepository.findAll(pageable);
-        if(allProvider.hasContent()) {
+        if(allProvider.hasContent())
             return new ArrayList<>(allProvider.getContent());
-        }
         return new ArrayList<>();
     }
 }

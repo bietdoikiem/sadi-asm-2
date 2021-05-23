@@ -25,7 +25,7 @@ public class CustomerService {
     // Update one customer
     public Customer updateCustomer(int id, Customer customer) {
         Customer existingCustomer = customerRepository.findById(id).orElse(null);
-        if (existingCustomer != null) {
+        if(existingCustomer != null) {
             existingCustomer.setId(id);
             existingCustomer.setContactPerson(customer.getContactPerson());
             existingCustomer.setPhone(customer.getPhone());
@@ -75,9 +75,8 @@ public class CustomerService {
     public ArrayList<Customer> getAllCustomers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Customer> allCustomers = customerRepository.findAll(pageable);
-        if (allCustomers.hasContent()) {
+        if(allCustomers.hasContent())
             return new ArrayList<>(allCustomers.getContent());
-        }
         return new ArrayList<>();
     }
 }

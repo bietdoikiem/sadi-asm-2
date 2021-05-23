@@ -1,8 +1,6 @@
 package com.rmit.demo.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.persistence.*;
 import java.util.List;
 
