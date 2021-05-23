@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class OrderDetailService {
+public class OrderDetailService implements CrudService<OrderDetail> {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
     // READ All OrderDetail
-    public List<OrderDetail> getAllOrderDetails() {
+    public List<OrderDetail> getAll() {
         var it = orderDetailRepository.findAll();
         var orderDetails = new ArrayList<OrderDetail>();
         it.forEach(orderDetails::add);
@@ -38,17 +38,17 @@ public class OrderDetailService {
     }
 
     // READ One OrderDetail by ID
-    public OrderDetail getOrderDetailById(int id) {
+    public OrderDetail getOne(int id) {
         return orderDetailRepository.findById(id).orElse(null);
     }
 
     // POST New OrderDetail by ID
-    public OrderDetail saveOrderDetail(OrderDetail orderDetail) {
+    public OrderDetail saveOne(OrderDetail orderDetail) {
         return orderDetailRepository.save(orderDetail);
     }
 
     // DO UPDATE Here
-    public OrderDetail updateOrderDetail(int orderDetailId, OrderDetail orderDetail) {
+    public OrderDetail updateOne(int orderDetailId, OrderDetail orderDetail) {
         OrderDetail foundOrderDetail = orderDetailRepository.findById(orderDetailId).orElse(null);
         if (foundOrderDetail != null) {
             foundOrderDetail.setAll(orderDetail);
@@ -59,12 +59,10 @@ public class OrderDetailService {
     }
 
     // Do DELETE Here
-    public String deleteOrderDetail(int orderDetailId) {
+    public int deleteOne(int orderDetailId) {
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElse(null);
-        if (orderDetail != null) {
-            orderDetailRepository.delete(orderDetail);
-            return "order detail " + orderDetailId + " removed!!";
-        }
-        return null;
+        orderDetailRepository.delete(orderDetail);
+        return orderDetail.getId();
+
     }
 }

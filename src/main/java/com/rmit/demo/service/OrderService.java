@@ -19,13 +19,13 @@ import java.util.List;
 
 @Transactional
 @Service
-public class OrderService {
+public class OrderService implements CrudService<Order> {
 
     @Autowired
     private OrderRepository orderRepository;
 
     // Get all orders
-    public List<Order> getAllOrders() {
+    public List<Order> getAll() {
         var it = orderRepository.findAll();
         var orders = new ArrayList<Order>();
         it.forEach(orders::add);
@@ -46,23 +46,24 @@ public class OrderService {
     }
 
     // Get a order
-    public Order getOrderById(int id) {
+    public Order getOne(int id) {
         return orderRepository.findById(id).orElse(null);
     }
 
     // create order
-    public Order saveOrder(Order order) {
+    public Order saveOne(Order order) {
         return orderRepository.save(order);
     }
 
     // Delete order
-    public String deleteOrder(int id) {
-        orderRepository.deleteById(id);
-        return "product " + id + " removed!!";
+    public int deleteOne(int orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(NullPointerException::new);
+        orderRepository.delete(order);
+        return order.getId();
     }
 
     // Update order
-    public Order updateOrder(int id, Order order) {
+    public Order updateOne(int id, Order order) {
         Order existingOrder = orderRepository.findById(id).orElse(null);
         if (existingOrder != null) {
             existingOrder.setId(order.getId());

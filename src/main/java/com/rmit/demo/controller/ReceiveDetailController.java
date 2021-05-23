@@ -26,7 +26,7 @@ public class ReceiveDetailController implements CrudController<ReceiveDetail>{
 
     @Override
     public ResponseEntity<Object> getAll() {
-        return new ResponseEntity<>(receiveDetailService.getAllReceiveDetails(), HttpStatus.OK);
+        return new ResponseEntity<>(receiveDetailService.getAll(), HttpStatus.OK);
     }
 
     // Read all receive detail by pagination
@@ -38,24 +38,24 @@ public class ReceiveDetailController implements CrudController<ReceiveDetail>{
 
     @Override
     public ResponseEntity<Object> getOne(int id) {
-        return new ResponseEntity<>(receiveDetailService.getReceiveDetailById(id), HttpStatus.OK);
+        return new ResponseEntity<>(receiveDetailService.getOne(id), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Object> saveOne(ReceiveDetail receiveDetail) {
-        return new ResponseEntity<>(receiveDetailService.saveReceiveDetail(receiveDetail), HttpStatus.OK);
+        return new ResponseEntity<>(receiveDetailService.saveOne(receiveDetail), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Object> updateOne(int id, ReceiveDetail receiveDetail) {
-        ReceiveDetail updatedReceiveDetail = receiveDetailService.updateReceiveDetail(id, receiveDetail);
+        ReceiveDetail updatedReceiveDetail = receiveDetailService.updateOne(id, receiveDetail);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/receive-details/" + receiveDetail.getId(), String.format("Receive detail %d updated successfully.", updatedReceiveDetail.getId()), updatedReceiveDetail);
     }
 
     // Delete
     @Override
     public ResponseEntity<Object> deleteOne(int id) {
-        receiveDetailService.deleteReceiveDetail(id);
+        receiveDetailService.deleteOne(id);
         return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, "/receive-details/" + id, String.format("Receive detail %d deleted successfully.", id), null);
     }
 }

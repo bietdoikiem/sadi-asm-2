@@ -13,13 +13,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReceiveDetailService {
+public class ReceiveDetailService implements CrudService<ReceiveDetail> {
     @Autowired
     private ReceiveDetailRepository receiveDetailRepository;
 
 
     // READ All receive detail
-    public List<ReceiveDetail> getAllReceiveDetails() {
+    public List<ReceiveDetail> getAll() {
         var it = receiveDetailRepository.findAll();
         var receiveDetails = new ArrayList<ReceiveDetail>();
         it.forEach(receiveDetails::add);
@@ -39,17 +39,17 @@ public class ReceiveDetailService {
     }
 
     // READ One receive detail by ID
-    public ReceiveDetail getReceiveDetailById(int id) {
+    public ReceiveDetail getOne(int id) {
         return receiveDetailRepository.findById(id).orElse(null);
     }
 
     // POST New receive detail
-    public ReceiveDetail saveReceiveDetail(ReceiveDetail receiveDetail) {
+    public ReceiveDetail saveOne(ReceiveDetail receiveDetail) {
         return receiveDetailRepository.save(receiveDetail);
     }
 
     // UPDATE Here
-    public ReceiveDetail updateReceiveDetail(int receiveDetailId, ReceiveDetail receiveDetail) {
+    public ReceiveDetail updateOne(int receiveDetailId, ReceiveDetail receiveDetail) {
         ReceiveDetail foundReceiveDetail = receiveDetailRepository.findById(receiveDetailId).orElse(null);
         if (foundReceiveDetail != null) {
             foundReceiveDetail.setAll(receiveDetail);
@@ -60,12 +60,9 @@ public class ReceiveDetailService {
     }
 
     // Do DELETE Here
-    public String deleteReceiveDetail(int receiveDetailId) {
+    public int deleteOne(int receiveDetailId) {
         ReceiveDetail receiveDetail = receiveDetailRepository.findById(receiveDetailId).orElse(null);
-        if (receiveDetail != null) {
-            receiveDetailRepository.delete(receiveDetail);
-            return "order detail " + receiveDetailId + " removed!!";
-        }
-        return null;
+        receiveDetailRepository.delete(receiveDetail);
+        return receiveDetail.getId();
     }
 }

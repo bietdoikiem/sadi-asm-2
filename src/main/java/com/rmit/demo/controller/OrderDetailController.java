@@ -27,7 +27,7 @@ public class OrderDetailController implements CrudController<OrderDetail>{
     // Get all order details
     @Override
     public ResponseEntity<Object> getAll() {
-        return new ResponseEntity<>(orderDetailService.getAllOrderDetails(), HttpStatus.OK);
+        return new ResponseEntity<>(orderDetailService.getAll(), HttpStatus.OK);
     }
 
     @Override
@@ -39,26 +39,26 @@ public class OrderDetailController implements CrudController<OrderDetail>{
     // Get one order detail by id
     @Override
     public ResponseEntity<Object> getOne(int id) {
-        return new ResponseEntity<>(orderDetailService.getOrderDetailById(id), HttpStatus.OK);
+        return new ResponseEntity<>(orderDetailService.getOne(id), HttpStatus.OK);
     }
 
     // Create an order detail
     @Override
     public ResponseEntity<Object> saveOne(OrderDetail orderDetail) {
-        return new ResponseEntity<>(orderDetailService.saveOrderDetail(orderDetail), HttpStatus.OK);
+        return new ResponseEntity<>(orderDetailService.saveOne(orderDetail), HttpStatus.OK);
     }
 
     // Update order detail
     @Override
     public ResponseEntity<Object> updateOne(int id, OrderDetail orderDetail) {
-        OrderDetail updatedOrderDetail = orderDetailService.updateOrderDetail(id, orderDetail);
+        OrderDetail updatedOrderDetail = orderDetailService.updateOne(id, orderDetail);
         return ResponseHandler.generateResponse(HttpStatus.OK, true, "/order-details/" + orderDetail.getId(), String.format("Order detail %d updated successfully.", updatedOrderDetail.getId()), updatedOrderDetail);
     }
 
     // Delete order detail
     @Override
     public ResponseEntity<Object> deleteOne(int id) {
-        orderDetailService.deleteOrderDetail(id);
+        orderDetailService.deleteOne(id);
         return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, "/order-details/" + id, String.format("Order detail %d deleted successfully.", id), null);
     }
 }
