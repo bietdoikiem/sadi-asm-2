@@ -111,7 +111,7 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
         // Normalized Datetime to the beginning and very end of the date
         Date normStartDate = DateUtils.normalizeDateAtStart(startDate);
         Date normEndDate = DateUtils.normalizeDateAtEnd(endDate);
-        return saleInvoiceRepository.findSaleInvoicesByCustomerAndDateBetween(customer, startDate, endDate);
+        return saleInvoiceRepository.findSaleInvoicesByCustomerAndDateBetween(customer, normStartDate, normEndDate);
     }
 
     public List<SaleInvoice> getAllSaleInvoicesByStaffAndPeriod(int staffId, Date startDate, Date endDate) {
@@ -120,7 +120,7 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
         // Normalized Datetime to the beginning and very end of the date
         Date normStartDate = DateUtils.normalizeDateAtStart(startDate);
         Date normEndDate = DateUtils.normalizeDateAtEnd(endDate);
-        return saleInvoiceRepository.findSaleInvoicesByStaffAndDateBetween(staff, startDate, endDate);
+        return saleInvoiceRepository.findSaleInvoicesByStaffAndDateBetween(staff, normStartDate, normEndDate);
     }
 
 

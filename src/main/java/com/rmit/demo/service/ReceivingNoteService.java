@@ -5,7 +5,9 @@ import com.rmit.demo.model.Product;
 import com.rmit.demo.model.ReceiveDetail;
 import com.rmit.demo.model.ReceivingNote;
 import com.rmit.demo.repository.OrderRepository;
+import com.rmit.demo.repository.ReceiveDetailRepository;
 import com.rmit.demo.repository.ReceivingNoteRepository;
+import com.rmit.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,9 @@ public class ReceivingNoteService {
 
     @Autowired
     private ReceivingNoteRepository receivingNoteRepository;
+
+    @Autowired
+    private ReceiveDetailRepository receiveDetailRepository;
 
     //get a receive note by id
     public ReceivingNote getReceivingNoteById(int id) {
@@ -53,7 +58,11 @@ public class ReceivingNoteService {
     }
 
     // Create receiving note
+    // Create receiving note along with receiving details
     public ReceivingNote saveReceivingNote(ReceivingNote receivingNote) {
+        for (ReceiveDetail receiveDetail: receivingNote.getReceiveDetailList()) {
+            receiveDetail.setReceivingNote(receivingNote);
+        }
         return receivingNoteRepository.save(receivingNote);
     }
 
@@ -78,9 +87,8 @@ public class ReceivingNoteService {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         sdf.setLenient(false);
-
-        Date parsedStart = sdf.parse(startDate);
-        Date parsedEnd = sdf.parse(endDate);
+        Date parsedStart = sdf.parse(startDate + " 00:00:00");
+        Date parsedEnd = sdf.parse(endDate + " 23:59:59");
 
         ArrayList<ReceivingNote> receivingNotes = new ArrayList<>();
         receivingNoteRepository.findAll().forEach(receivingNotes::add);
@@ -92,5 +100,10 @@ public class ReceivingNoteService {
             }
         }
         return filteredReceivingNote;
+    }
+
+    public List<ReceiveDetail> getReceiveDetailListByReceivingNote(int receivingNoteId) {
+        ReceivingNote receivingNote = receivingNoteRepository.findById(receivingNoteId).orElseThrow(NullPointerException::new);
+        return receiveDetailRepository.findReceiveDetailsByReceivingNote(receivingNote);
     }
 }

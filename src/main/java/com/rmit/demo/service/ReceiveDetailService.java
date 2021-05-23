@@ -17,6 +17,7 @@ public class ReceiveDetailService {
     @Autowired
     private ReceiveDetailRepository receiveDetailRepository;
 
+
     // READ All receive detail
     public List<ReceiveDetail> getAllReceiveDetails() {
         var it = receiveDetailRepository.findAll();

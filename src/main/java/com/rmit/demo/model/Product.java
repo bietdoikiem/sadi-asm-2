@@ -30,11 +30,16 @@ public class Product {
     // One-to-Many Relationships
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<OrderDetail> orderDetails;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<ReceiveDetail> receiveDetailList;
+
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<DeliveryDetail> deliveryDetailList;
 
 
@@ -61,6 +66,14 @@ public class Product {
 
     public void setSaleDetailList(List<SaleDetail> saleDetailList) {
         this.saleDetailList = saleDetailList;
+    }
+
+    public List<ReceiveDetail> getReceiveDetailList() {
+        return receiveDetailList;
+    }
+
+    public void setReceiveDetailList(List<ReceiveDetail> receiveDetailList) {
+        this.receiveDetailList = receiveDetailList;
     }
 
     @PreRemove

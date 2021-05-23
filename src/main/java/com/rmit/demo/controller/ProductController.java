@@ -44,7 +44,7 @@ public class ProductController implements CrudController<Product> {
     // CREATE a product
     public ResponseEntity<Object> saveOne(@RequestBody Product product) {
         Product savedProduct = productService.saveOne(product);
-        return ResponseHandler.generateResponse(HttpStatus.CREATED, true, "/products/" + savedProduct.getId(),
+        return ResponseHandler.generateResponse(HttpStatus.CREATED, true, "/products",
                 String.format("Product %d created successfully", savedProduct.getId()), savedProduct);
     }
 
