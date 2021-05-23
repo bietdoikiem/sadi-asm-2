@@ -28,11 +28,6 @@ public class ReceivingNoteController implements CrudController<ReceivingNote> {
         this.receivingNoteService = receivingNoteService;
     }
 
-    // Filter by Date
-    @RequestMapping(value="/filter", method = RequestMethod.GET)
-    public ArrayList<ReceivingNote> filterByStartAndEndDate(@RequestParam String startDate, @RequestParam String endDate) throws ParseException {
-        return receivingNoteService.getReceivingNotesByStartDateAndEndDate(startDate, endDate);
-    }
 
     @Override
     public ResponseEntity<Object> getAll() {
