@@ -4,6 +4,7 @@ import com.rmit.demo.model.Order;
 import com.rmit.demo.model.ReceiveDetail;
 import com.rmit.demo.model.ReceivingNote;
 import com.rmit.demo.repository.OrderRepository;
+import com.rmit.demo.repository.ReceiveDetailRepository;
 import com.rmit.demo.repository.ReceivingNoteRepository;
 import com.rmit.demo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class ReceivingNoteService {
 
     @Autowired
     private ReceivingNoteRepository receivingNoteRepository;
+
+    @Autowired
+    private ReceiveDetailRepository receiveDetailRepository;
 
     //get a receive note by id
     public ReceivingNote getReceivingNoteById(int id) {
@@ -82,5 +86,10 @@ public class ReceivingNoteService {
             }
         }
         return filteredReceivingNote;
+    }
+
+    public List<ReceiveDetail> getReceiveDetailListByReceivingNote(int receivingNoteId) {
+        ReceivingNote receivingNote = receivingNoteRepository.findById(receivingNoteId).orElseThrow(NullPointerException::new);
+        return receiveDetailRepository.findReceiveDetailsByReceivingNote(receivingNote);
     }
 }
