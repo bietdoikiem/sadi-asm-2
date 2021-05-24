@@ -115,7 +115,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    @DisplayName("Test ADD One Category")
+    @DisplayName("Testg ADD One Category")
     void testSaveOne() throws Exception {
         Map<String, Object> body = new HashMap<>();
         body.put("name", "Classic Sneaker Dope");
