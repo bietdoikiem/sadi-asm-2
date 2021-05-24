@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
 public interface ProductRepository extends CrudRepository<Product, Integer>, ProductRepositoryCustom, JpaRepository<Product, Integer>{
     public Product findByName(String name);
 

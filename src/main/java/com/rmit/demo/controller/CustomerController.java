@@ -14,7 +14,6 @@ import java.util.HashMap;
 @RequestMapping(path="/customers")
 public class CustomerController implements CrudController<Customer>{
     private final CustomerService customerService;
-
     @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;

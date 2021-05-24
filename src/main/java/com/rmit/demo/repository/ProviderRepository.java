@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 @Repository
-@Transactional
 public interface ProviderRepository extends CrudRepository<Provider, Integer>, JpaRepository<Provider, Integer>,ProviderRepositoryCustom {
     ArrayList<Provider> findAllByName(String name);
     ArrayList<Provider> findAllByAddress(String address);
