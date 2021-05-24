@@ -24,6 +24,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.orm.hibernate5.*;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;

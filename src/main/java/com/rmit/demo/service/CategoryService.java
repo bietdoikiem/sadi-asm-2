@@ -17,8 +17,14 @@ import java.util.List;
 @Service
 public class CategoryService implements CrudService<Category> {
 
-    @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+    public CategoryService() {}
+
 
     // READ All Categories
     public List<Category> getAll() {
@@ -39,7 +45,8 @@ public class CategoryService implements CrudService<Category> {
 
     // READ One Category
     public Category getOne(int id) {
-        return categoryRepository.findById(id).orElse(null);
+        System.out.println("Save method Called");
+        return categoryRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 
     // CREATE One Category
@@ -49,15 +56,15 @@ public class CategoryService implements CrudService<Category> {
 
     // UPDATE One Category
     public Category updateOne(int categoryId, Category category) {
-        Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
-        c.setAll(category);
+        Category c = this.getOne(categoryId);
+        c.setName(category.getName());
         categoryRepository.saveAndReset(c);
         return c;
     }
 
     // DELETE One Category
     public int deleteOne(int categoryId) {
-        Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
+        Category c = this.getOne(categoryId);
         categoryRepository.delete(c);
         for (Product product: c.getProducts()) {
             product.setCategory(null);

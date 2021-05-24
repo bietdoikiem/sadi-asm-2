@@ -1,34 +1,51 @@
 package com.rmit.demo.controller;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rmit.demo.config.RestExceptionHandler;
 import com.rmit.demo.model.Category;
+import com.rmit.demo.model.Product;
 import com.rmit.demo.repository.CategoryRepository;
 import com.rmit.demo.service.CategoryService;
+import org.checkerframework.checker.units.qual.A;
+import org.hibernate.service.spi.InjectService;
+import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityManager;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
@@ -42,21 +59,44 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@WebMvcTest(CategoryController.class)
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class CategoryControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+
+    @Mock
+    protected CategoryService categoryService;
+    protected Category category;
+    protected List<Category> categoryList;
+
+    @InjectMocks
+    protected CategoryController categoryController;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    protected MockMvc mockMvc;
 
-    @MockBean
-    private CategoryService categoryService;
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    @MockBean
-    private CategoryRepository categoryRepository;
+
+    @BeforeEach
+    void setUp() {
+        category = new Category(1, "Modern Sneaker");
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(categoryController)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+        Mockito.reset();
+    }
+
+    @AfterEach
+    void tearDown() {
+        category = null;
+    }
 
     @Test
     @DisplayName("Test GET all Category as a list")
@@ -86,67 +126,107 @@ class CategoryControllerTest {
         Mockito.when(categoryService.getAll()).thenReturn(categoryList);
 
         String url = "/categories";
-        mockMvc.perform(get(url))
+        MvcResult mvcResult = mockMvc.perform(get(url))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", hasSize(0)));
+                .andExpect(jsonPath("$.data", hasSize(0)))
+                .andReturn();
     }
 
     @Test
     @DisplayName("Test GET one Category by Id")
     void testGetOne() throws Exception {
-        Category category = new Category(1, "Classic Sneaker");
+        int id = 1;
+        Category category = new Category(id, "Classic Sneaker");
 
-        Mockito.when(categoryService.getOne(1)).thenReturn(category);
+        Mockito.when(categoryService.getOne(id)).thenReturn(category);
 
-        String url = "/categories/1";
-        mockMvc.perform(get(url))
+        String url = "/categories/{id}";
+        mockMvc.perform(get(url, id))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id", is(1)))
+                .andExpect(jsonPath("$.data.id", is(id)))
                 .andExpect(jsonPath("$.data.name", is("Classic Sneaker")));
     }
 
     @Test
     @DisplayName("Test GET Null Resource by Unknown ID")
     void testGetOneEmpty() throws Exception {
-        Mockito.when(categoryService.getOne(2222)).thenReturn(null);
-        String url ="/categories/2222";
-        mockMvc.perform(get(url))
+        int id = 5;
+        Mockito.when(categoryService.getOne(5)).thenReturn(null);
+        String url = "/categories/{id}";
+        mockMvc.perform(get(url, 5))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("Testg ADD One Category")
+    @DisplayName("Test ADD One Category")
     void testSaveOne() throws Exception {
-        Map<String, Object> body = new HashMap<>();
-        body.put("name", "Classic Sneaker Dope");
-
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("name", "Classic Sneaker Dope");
+        String requestJson = asJsonString(requestBody);
 
         String url = "/categories";
         Mockito.when(categoryService.saveOne(any(Category.class))).
-                thenReturn(new Category(1, "Dope Classic Sneaker"));
+                thenReturn(new Category(1, "Classic Sneaker Dope"));
 
         mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body)))
+                .content(requestJson))
                 .andExpect(status().isCreated());
     }
 
     @Test
     @DisplayName("Test Bad Request with wrong response format (redundant ID)")
     void testSaveOneError() throws Exception {
-        Map<String, Object> body = new HashMap<>();
-        // Redundant Id to request body for creating new Category
-        body.put("id", 1);
-        body.put("name", "Dope Classic Sneaker");
+        Map<String, Object> requestBody = new HashMap<>();
+        // Redundant Id to Request Body for creating new Category
+        requestBody.put("id", 1);
+        requestBody.put("name", "Dope Classic Sneaker");
 
-        Mockito.when(categoryService.saveOne(any(Category.class)))
-                .thenReturn(new Category(1, "Dope Classic Sneaker"));
+        String requestJson = asJsonString(requestBody);
+        Category category = new Category(1, "Dope Classic Sneaker");
 
-        String url ="/categories";
+        // Request Object
+
+        Mockito.when(categoryService.saveOne(category))
+                .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        String url = "/categories";
         mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)))
-                .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("Test success UPDATE method for Category")
+    void testUpdateOne() throws Exception {
+        int id = 1;
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("name", "Future Sneaker");
+        String requestJson = asJsonString(requestBody);
+        // Mocked Request Object
+        Category category = new Category(id, "Modern Sneaker");
+        Category updatedCategory = new Category(id, "Future Sneaker");
+        // Mocked responses
+        Mockito.lenient().when(categoryService.getOne(anyInt())).thenReturn(category);
+        Mockito.lenient().when(categoryService.updateOne(anyInt(), any(Category.class))).thenReturn(updatedCategory);
+        mockMvc.perform(put("/categories/{id}", category.getId()).contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Test Success Delete Method")
+    void testDeleteOne() throws Exception {
+        int id = 1;
+        Category category = new Category(id, "Classic Sneaker");
+
+        Mockito.lenient().when(categoryService.getOne(anyInt())).thenReturn(category);
+        Mockito.lenient().when(categoryService.deleteOne(anyInt())).thenReturn(1);
+
+        mockMvc.perform(delete("/categories/{id}", category.getId()))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.url", is("/categories/" + category.getId())));
     }
 
 
