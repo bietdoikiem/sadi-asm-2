@@ -11,6 +11,5 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
 public interface ReceivingNoteRepository extends JpaRepository<ReceivingNote, Integer> {
 }

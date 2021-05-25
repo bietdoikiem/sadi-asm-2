@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
 public interface ReceiveDetailRepository extends JpaRepository<ReceiveDetail, Integer> {
     List<ReceiveDetail> findReceiveDetailsByReceivingNote(ReceivingNote receivingNote);
 }
