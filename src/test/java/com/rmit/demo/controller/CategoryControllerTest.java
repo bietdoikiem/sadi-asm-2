@@ -208,7 +208,7 @@ class CategoryControllerTest {
         Category updatedCategory = new Category(id, "Future Sneaker");
         // Mocked responses
         Mockito.lenient().when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
-        Mockito.lenient().when(categoryService.updateOne(isA(Integer.class), isA(Category.class))).thenReturn(updatedCategory);
+        Mockito.lenient().when(categoryService.updateOne(intThat(i -> i == id), isA(Category.class))).thenReturn(updatedCategory);
         mockMvc.perform(put("/categories/{id}", category.getId()).contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isOk());
