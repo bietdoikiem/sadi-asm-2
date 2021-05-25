@@ -32,7 +32,7 @@ public class DeliveryNoteService implements CrudService<DeliveryNote> {
     public List<DeliveryNote> getAll() {
         // Find all delivery notes via it repository
         var it = deliveryNoteRepository.findAll();
-        return new ArrayList<DeliveryNote>(it);
+        return new ArrayList<>(it);
     }
 
     // READ All DeliveryNotes by Pagination

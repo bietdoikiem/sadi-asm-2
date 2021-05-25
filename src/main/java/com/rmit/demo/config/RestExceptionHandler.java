@@ -36,6 +36,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.clear();
+        map.put("timestamp", new Date());
+        map.put("status", HttpStatus.BAD_REQUEST.value());
+        map.put("isSuccess", false);
+        map.put("message", "IllegalArgumentException. " + ex);
+        map.put("data", null);
+        return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(Throwable.class)
     private ResponseEntity<Object> handleAnyException(Throwable ex, HttpServletRequest request) {
