@@ -23,7 +23,7 @@ import java.util.List;
 
 @Transactional
 @Service
-public class ReceivingNoteService {
+public class ReceivingNoteService implements CrudService<ReceivingNote>{
 
     @Autowired
     private ReceivingNoteRepository receivingNoteRepository;
@@ -32,12 +32,12 @@ public class ReceivingNoteService {
     private ReceiveDetailRepository receiveDetailRepository;
 
     //get a receive note by id
-    public ReceivingNote getReceivingNoteById(int id) {
+    public ReceivingNote getOne(int id) {
         return receivingNoteRepository.findById(id).orElse(null);
     }
 
     // get all receiving note
-    public List<ReceivingNote> getAllReceivingNotes() {
+    public List<ReceivingNote> getAll() {
         var it = receivingNoteRepository.findAll();
         var receivingNotes = new ArrayList<ReceivingNote>();
         it.forEach(receivingNotes::add);
@@ -59,7 +59,7 @@ public class ReceivingNoteService {
 
     // Create receiving note
     // Create receiving note along with receiving details
-    public ReceivingNote saveReceivingNote(ReceivingNote receivingNote) {
+    public ReceivingNote saveOne(ReceivingNote receivingNote) {
         for (ReceiveDetail receiveDetail: receivingNote.getReceiveDetailList()) {
             receiveDetail.setReceivingNote(receivingNote);
         }
@@ -67,15 +67,15 @@ public class ReceivingNoteService {
     }
 
     // Delete receiving note
-    public String deleteReceivingNote(int id) {
-        receivingNoteRepository.deleteById(id);
-        return"Receiving note " + id + " removed!!";
+    public int deleteOne(int receivingNoteId) {
+        ReceivingNote receivingNote = receivingNoteRepository.findById(receivingNoteId).orElseThrow(NullPointerException::new);
+        receivingNoteRepository.delete(receivingNote);
+        return receivingNote.getId();
     }
 
     // Update receiving note
-    public ReceivingNote updateReceivingNote(ReceivingNote receivingNote) {
-        ReceivingNote existingReceivingNote = receivingNoteRepository.findById(receivingNote.getId()).orElse(null);
-
+    public ReceivingNote updateOne(int receivingNoteId, ReceivingNote receivingNote) {
+        ReceivingNote existingReceivingNote = receivingNoteRepository.findById(receivingNoteId).orElse(null);
         if (existingReceivingNote != null) {
             existingReceivingNote.setAll(receivingNote);
             return receivingNoteRepository.save(existingReceivingNote);

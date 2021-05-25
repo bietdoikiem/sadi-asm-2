@@ -26,8 +26,14 @@ public class DeliveryDetail {
     public DeliveryDetail() {};
 
     public DeliveryDetail(int id, DeliveryNote deliveryNote, Product product, int quantity) {
+        super();
         this.id = id;
         this.deliveryNote = deliveryNote;
+        this.product = product;
+        this.quantity = quantity;
+    }
+    public DeliveryDetail(Product product, int quantity) {
+        super();
         this.product = product;
         this.quantity = quantity;
     }

@@ -84,7 +84,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("Test Fail GET One Category by Invalid Id")
+    @DisplayName("Test Failed GET One Category by Invalid Id")
     void testFailGetOne() {
         int id = 1;
         int invalidId=99;
@@ -134,7 +134,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("Test Fail DELETE method for Category with invalid Id")
+    @DisplayName("Test Failed DELETE method for Category with invalid Id")
     void testFailDeleteOne() {
         int validId = 1;
         int invalidId = 2;

@@ -17,7 +17,7 @@ public abstract class InventoryNote {
     private Date date;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="staff_id", referencedColumnName = "id")
+    @JoinColumn(name="staff_id", referencedColumnName = "id", nullable = false)
     private Staff staff;
 
 

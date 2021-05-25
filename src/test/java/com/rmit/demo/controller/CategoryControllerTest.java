@@ -16,36 +16,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.server.ResponseStatusException;
-
-import javax.persistence.EntityManager;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-
-import static org.hamcrest.Matchers.in;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,7 +31,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +52,7 @@ class CategoryControllerTest {
     @Autowired
     protected MockMvc mockMvc;
 
+    // Convert To JSON string func
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
@@ -98,7 +76,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    @DisplayName("Test GET all Category as a list")
+    @DisplayName("Test GET all Category list")
     void testGetAll() throws Exception {
         List<Category> categoryList = new ArrayList<>();
         categoryList.add(new Category(1, "Classic Sneaker"));
@@ -248,7 +226,7 @@ class CategoryControllerTest {
         Category category = new Category(id, "Classic Sneaker");
 
         Mockito.lenient().when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
-        Mockito.lenient().when(categoryService.deleteOne(id)).thenReturn(1);
+        Mockito.lenient().when(categoryService.deleteOne(id)).thenReturn(id);
 
         mockMvc.perform(delete("/categories/{id}", category.getId()))
                 .andExpect(status().isAccepted())
@@ -263,9 +241,8 @@ class CategoryControllerTest {
         Category category = new Category(validId, "Classic Sneaker");
 
         // Return successfully if return valid id
-        Mockito.lenient().when(categoryRepository.findById(validId)).thenReturn(Optional.of(category));
-        Mockito.lenient().when(categoryService.deleteOne(validId)).thenReturn(validId);
-        Mockito.lenient().when(categoryService.deleteOne(invalidId)).thenThrow(new NullPointerException());
+        Mockito.when(categoryService.deleteOne(validId)).thenReturn(validId);
+        Mockito.when(categoryService.deleteOne(invalidId)).thenThrow(new NullPointerException());
 
         // If retrieved valid Id, the operation is successful
         mockMvc.perform(delete("/categories/{id}", validId))
