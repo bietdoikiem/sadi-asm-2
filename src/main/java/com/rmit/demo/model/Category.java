@@ -1,6 +1,7 @@
 package com.rmit.demo.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "category")
+@JsonIgnoreProperties(ignoreUnknown = false)
 public class Category {
 
     @Id
@@ -28,6 +30,12 @@ public class Category {
 
     ;
 
+    public Category(int id, String name, List<Product> products) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.products = products;
+    }
     public Category(int id, String name) {
         super();
         this.id = id;

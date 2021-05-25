@@ -52,6 +52,7 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = true)
     private Category category;
 
+
     public List<DeliveryDetail> getDeliveryDetailList() {
         return deliveryDetailList;
     }
@@ -86,8 +87,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String model, String brand, String company, String description, double price, Category category) {
+    public Product(int id, String name, String model, String brand, String company, String description, double price, Category category) {
         super();
+        this.id = id;
         this.name = name;
         this.model = model;
         this.brand = brand;

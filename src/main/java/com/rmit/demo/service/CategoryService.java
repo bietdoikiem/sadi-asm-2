@@ -20,11 +20,14 @@ public class CategoryService implements CrudService<Category> {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    public CategoryService() {}
+
+
     // READ All Categories
     public List<Category> getAll() {
         var it = categoryRepository.findAll();
 
-        return new ArrayList<Category>(it);
+        return new ArrayList<>(it);
     }
 
     // READ ALL Category by Pagination
@@ -39,7 +42,7 @@ public class CategoryService implements CrudService<Category> {
 
     // READ One Category
     public Category getOne(int id) {
-        return categoryRepository.findById(id).orElse(null);
+        return categoryRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 
     // CREATE One Category
@@ -50,7 +53,7 @@ public class CategoryService implements CrudService<Category> {
     // UPDATE One Category
     public Category updateOne(int categoryId, Category category) {
         Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
-        c.setAll(category);
+        c.setName(category.getName());
         categoryRepository.saveAndReset(c);
         return c;
     }
@@ -59,9 +62,6 @@ public class CategoryService implements CrudService<Category> {
     public int deleteOne(int categoryId) {
         Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
         categoryRepository.delete(c);
-        for (Product product: c.getProducts()) {
-            product.setCategory(null);
-        }
         return c.getId();
     }
 }
