@@ -1,6 +1,7 @@
 package com.rmit.demo.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "category")
+@JsonIgnoreProperties(ignoreUnknown = false)
 public class Category {
 
     @Id

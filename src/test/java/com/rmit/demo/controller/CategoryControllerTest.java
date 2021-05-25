@@ -44,6 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static org.hamcrest.Matchers.in;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -65,8 +66,8 @@ class CategoryControllerTest {
 
     @Mock
     protected CategoryService categoryService;
-    protected Category category;
-    protected List<Category> categoryList;
+    @Mock
+    protected CategoryRepository categoryRepository;
 
     @InjectMocks
     protected CategoryController categoryController;
@@ -85,7 +86,6 @@ class CategoryControllerTest {
 
     @BeforeEach
     void setUp() {
-        category = new Category(1, "Modern Sneaker");
         mockMvc = MockMvcBuilders
                 .standaloneSetup(categoryController)
                 .setControllerAdvice(new RestExceptionHandler())
@@ -95,7 +95,6 @@ class CategoryControllerTest {
 
     @AfterEach
     void tearDown() {
-        category = null;
     }
 
     @Test
@@ -158,14 +157,14 @@ class CategoryControllerTest {
     }
 
     @Test
-    @DisplayName("Test ADD One Category")
+    @DisplayName("Test CREATE One Category")
     void testSaveOne() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("name", "Classic Sneaker Dope");
         String requestJson = asJsonString(requestBody);
 
         String url = "/categories";
-        Mockito.when(categoryService.saveOne(any(Category.class))).
+        Mockito.when(categoryService.saveOne(isA(Category.class))).
                 thenReturn(new Category(1, "Classic Sneaker Dope"));
 
         mockMvc.perform(post(url)
@@ -175,20 +174,20 @@ class CategoryControllerTest {
     }
 
     @Test
-    @DisplayName("Test Bad Request with wrong response format (redundant ID)")
+    @DisplayName("Test CREATE method Bad Request with wrong response format (wrong fieldname)")
     void testSaveOneError() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         // Redundant Id to Request Body for creating new Category
         requestBody.put("id", 1);
-        requestBody.put("name", "Dope Classic Sneaker");
+        requestBody.put("vipProMUName", "Dope Classic Sneaker");
 
         String requestJson = asJsonString(requestBody);
         Category category = new Category(1, "Dope Classic Sneaker");
 
         // Request Object
 
-        Mockito.when(categoryService.saveOne(category))
-                .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        Mockito.lenient().when(categoryService.saveOne(category))
+                .thenReturn(category);
 
         String url = "/categories";
         mockMvc.perform(post(url)
@@ -208,25 +207,72 @@ class CategoryControllerTest {
         Category category = new Category(id, "Modern Sneaker");
         Category updatedCategory = new Category(id, "Future Sneaker");
         // Mocked responses
-        Mockito.lenient().when(categoryService.getOne(anyInt())).thenReturn(category);
-        Mockito.lenient().when(categoryService.updateOne(anyInt(), any(Category.class))).thenReturn(updatedCategory);
+        Mockito.lenient().when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
+        Mockito.lenient().when(categoryService.updateOne(isA(Integer.class), isA(Category.class))).thenReturn(updatedCategory);
         mockMvc.perform(put("/categories/{id}", category.getId()).contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("Test Success Delete Method")
+    @DisplayName("Test failed UPDATE method for Category when input invalid Category's Id")
+    void testFailUpdateOne() throws Exception {
+        int validId = 1;
+        int invalidId = 2;
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("name", "Future Sneaker");
+        String requestJson = asJsonString(requestBody);
+        // Mocked Object
+        Category category = new Category(1, "Modern Sneaker");
+        Category updatedCategory = new Category(1, "Future Sneaker");
+        // Mocked response
+        Mockito.lenient().when(categoryRepository.findById(validId)).thenReturn(Optional.of(category)); // valid object
+        Mockito.lenient().when(categoryService.updateOne(intThat(id -> id == validId), isA(Category.class))).thenReturn(updatedCategory); // mock update request
+        Mockito.lenient().when(categoryService.updateOne(intThat(id -> id == invalidId), isA(Category.class))).thenThrow(new NullPointerException()); // mock update request
+        // Perform Operation on valid entity successfully
+        mockMvc.perform(put("/categories/{id}", validId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson)
+        ).andExpect(status().isOk());
+        // Update Operation fail if invalid Id is provided
+        mockMvc.perform(put("/categories/{id}", invalidId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson)
+        ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Test Success DELETE Method")
     void testDeleteOne() throws Exception {
         int id = 1;
         Category category = new Category(id, "Classic Sneaker");
 
-        Mockito.lenient().when(categoryService.getOne(anyInt())).thenReturn(category);
-        Mockito.lenient().when(categoryService.deleteOne(anyInt())).thenReturn(1);
+        Mockito.lenient().when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
+        Mockito.lenient().when(categoryService.deleteOne(id)).thenReturn(1);
 
         mockMvc.perform(delete("/categories/{id}", category.getId()))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.url", is("/categories/" + category.getId())));
+    }
+
+    @Test
+    @DisplayName("Test Failed DELETE method for invalid id")
+    void testFailDeleteOne() throws Exception {
+        int validId = 1;
+        int invalidId = 2;
+        Category category = new Category(validId, "Classic Sneaker");
+
+        // Return successfully if return valid id
+        Mockito.lenient().when(categoryRepository.findById(validId)).thenReturn(Optional.of(category));
+        Mockito.lenient().when(categoryService.deleteOne(validId)).thenReturn(validId);
+        Mockito.lenient().when(categoryService.deleteOne(invalidId)).thenThrow(new NullPointerException());
+
+        // If retrieved valid Id, the operation is successful
+        mockMvc.perform(delete("/categories/{id}", validId))
+                .andExpect(status().isAccepted());
+        // Else fail DELETE operation
+        mockMvc.perform(delete("/categories/{id}", invalidId))
+                .andExpect(status().isNotFound());
     }
 
 

@@ -1,18 +1,23 @@
 package com.rmit.demo.config;
 
+import org.hibernate.exception.DataException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.ClassUtils;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -30,6 +35,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         map.put("data", null);
         return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
     }
+
 
     @ExceptionHandler(Throwable.class)
     private ResponseEntity<Object> handleAnyException(Throwable ex, HttpServletRequest request) {

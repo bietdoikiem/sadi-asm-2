@@ -17,11 +17,8 @@ import java.util.List;
 @Service
 public class CategoryService implements CrudService<Category> {
 
-    private CategoryRepository categoryRepository;
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    private CategoryRepository categoryRepository;
 
     public CategoryService() {}
 
@@ -30,7 +27,7 @@ public class CategoryService implements CrudService<Category> {
     public List<Category> getAll() {
         var it = categoryRepository.findAll();
 
-        return new ArrayList<Category>(it);
+        return new ArrayList<>(it);
     }
 
     // READ ALL Category by Pagination
@@ -45,7 +42,6 @@ public class CategoryService implements CrudService<Category> {
 
     // READ One Category
     public Category getOne(int id) {
-        System.out.println("Save method Called");
         return categoryRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 
@@ -56,7 +52,7 @@ public class CategoryService implements CrudService<Category> {
 
     // UPDATE One Category
     public Category updateOne(int categoryId, Category category) {
-        Category c = this.getOne(categoryId);
+        Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
         c.setName(category.getName());
         categoryRepository.saveAndReset(c);
         return c;
@@ -64,11 +60,8 @@ public class CategoryService implements CrudService<Category> {
 
     // DELETE One Category
     public int deleteOne(int categoryId) {
-        Category c = this.getOne(categoryId);
+        Category c = categoryRepository.findById(categoryId).orElseThrow(NullPointerException::new);
         categoryRepository.delete(c);
-        for (Product product: c.getProducts()) {
-            product.setCategory(null);
-        }
         return c.getId();
     }
 }
