@@ -112,5 +112,4 @@ public class SaleInvoiceController implements CrudController<SaleInvoice> {
                 String.format("All SaleInvoice by Staff %d between %s and %s fetched successfully.", id, startDateStr, endDateStr), saleInvoiceList);
     }
 
-
 }
