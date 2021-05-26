@@ -41,7 +41,6 @@ class SaleInvoiceServiceTest {
     @Mock
     private StaffRepository staffRepository;
 
-    @Autowired
     @InjectMocks
     private SaleInvoiceService saleInvoiceService;
 
@@ -341,7 +340,7 @@ class SaleInvoiceServiceTest {
         int validCustomerId = 1;
         List<SaleInvoice> saleInvoiceList = new ArrayList<>();
         saleInvoiceList.add(saleInvoice1);
-        saleInvoiceList.add(saleInvoice2);
+        saleInvoiceList.add(saleInvoice1);
         Date startDate = DateUtils.parseDate("05-05-2021 00:00:00");
         Date endDate = DateUtils.parseDate("06-05-2021 23:59:59");
         Date normStartDate = DateUtils.normalizeDateAtStart(startDate);
@@ -349,10 +348,10 @@ class SaleInvoiceServiceTest {
         // Mock Repo
         Mockito.when(customerRepository.findById(validCustomerId)).thenReturn(Optional.of(customer1));
         Mockito.when(saleInvoiceRepository.findSaleInvoicesByCustomerAndDateBetween(customer1, normStartDate, normEndDate))
-                .thenReturn(saleInvoiceList);
+                .thenReturn(saleInvoiceList.subList(0, 1));
         // Verify & Assert
         List<SaleInvoice> retrievedList = saleInvoiceService.getAllSaleInvoicesByCustomerAndPeriod(validCustomerId, startDate, endDate);
-        assertEquals(saleInvoiceList, retrievedList);
+        assertEquals(saleInvoiceList.subList(0, 1), retrievedList);
         verify(customerRepository, times(1)).findById(validCustomerId);
         verify(saleInvoiceRepository, times(1)).findSaleInvoicesByCustomerAndDateBetween(customer1, normStartDate, normEndDate);
     }
@@ -364,7 +363,7 @@ class SaleInvoiceServiceTest {
         int invalidCustomerId = 1;
         List<SaleInvoice> saleInvoiceList = new ArrayList<>();
         saleInvoiceList.add(saleInvoice1);
-        saleInvoiceList.add(saleInvoice2);
+        saleInvoiceList.add(saleInvoice1);
         Date startDate = DateUtils.parseDate("05-05-2021 00:00:00");
         Date endDate = DateUtils.parseDate("06-05-2021 23:59:59");
         Date normStartDate = DateUtils.normalizeDateAtStart(startDate);
@@ -392,10 +391,10 @@ class SaleInvoiceServiceTest {
         // Mock Repo
         Mockito.when(staffRepository.findById(validStaffId)).thenReturn(Optional.of(staff1));
         Mockito.when(saleInvoiceRepository.findSaleInvoicesByStaffAndDateBetween(staff1, normStartDate, normEndDate))
-                .thenReturn(saleInvoiceList);
+                .thenReturn(saleInvoiceList.subList(0, 1));
         // Verify & Assert
         List<SaleInvoice> retrievedList = saleInvoiceService.getAllSaleInvoicesByStaffAndPeriod(validStaffId, startDate, endDate);
-        assertEquals(saleInvoiceList, retrievedList);
+        assertEquals(saleInvoiceList.subList(0, 1), retrievedList);
         verify(staffRepository, times(1)).findById(validStaffId);
         verify(saleInvoiceRepository, times(1)).findSaleInvoicesByStaffAndDateBetween(staff1, normStartDate, normEndDate);
     }
@@ -407,7 +406,6 @@ class SaleInvoiceServiceTest {
         int invalidStaffId = 1;
         List<SaleInvoice> saleInvoiceList = new ArrayList<>();
         saleInvoiceList.add(saleInvoice1);
-        saleInvoiceList.add(saleInvoice2);
         Date startDate = DateUtils.parseDate("05-05-2021 00:00:00");
         Date endDate = DateUtils.parseDate("06-05-2021 23:59:59");
         Date normStartDate = DateUtils.normalizeDateAtStart(startDate);

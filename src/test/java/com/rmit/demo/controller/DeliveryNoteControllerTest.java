@@ -23,6 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -43,25 +45,21 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class DeliveryNoteControllerTest {
 
-    @Mock
+    @MockBean
     protected DeliveryNoteService deliveryNoteService;
 
-    @Mock
+    @MockBean
     protected DeliveryNoteRepository deliveryNoteRepository;
 
-    @Mock
-    protected StaffRepository staffRepository;
 
-    @Mock
-    protected DeliveryDetailRepository deliveryDetailRepository;
-
+    @Autowired
     @InjectMocks
     protected DeliveryNoteController deliveryNoteController;
 
-    @Autowired
     protected MockMvc mockMvc;
 
     // Defined Mock Objects
