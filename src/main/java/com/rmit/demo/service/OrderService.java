@@ -52,7 +52,7 @@ public class OrderService implements CrudService<Order> {
 
     // create order
     public Order saveOne(Order order) {
-        return orderRepository.save(order);
+        return orderRepository.saveAndReset(order);
     }
 
     // Delete order
@@ -64,20 +64,21 @@ public class OrderService implements CrudService<Order> {
 
     // Update order
     public Order updateOne(int id, Order order) {
-        Order existingOrder = orderRepository.findById(id).orElse(null);
+        Order existingOrder = orderRepository.findById(id).orElseThrow(NullPointerException::new);
         if (existingOrder != null) {
             existingOrder.setId(order.getId());
             existingOrder.setDate(order.getDate());
             existingOrder.setStaff(order.getStaff());
             existingOrder.setProvider(order.getProvider());
             existingOrder.setOrderDetails(order.getOrderDetails());
-            return orderRepository.save(existingOrder);
+            return orderRepository.saveAndReset(existingOrder);
         }
         return null;
 
     }
 
     public ArrayList<Order> getOrdersByStartDateAndEndDate(String startDate, String endDate) throws ParseException {
+
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         sdf.setLenient(false);
