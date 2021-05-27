@@ -49,20 +49,17 @@ public class CustomerService {
 
     // Get all customers by name
     public ArrayList<Customer> getAllCustomersByName(String name) {
-        ArrayList<Customer> customers = new ArrayList<>(customerRepository.findAllByName(name));
-        return customers.size() == 0 ? null : customers;
+        return new ArrayList<>(customerRepository.findAllByName(name));
     }
 
     // Get all customers by address
     public ArrayList<Customer> getAllCustomersByAddress(String address) {
-        ArrayList<Customer> customers = new ArrayList<>(customerRepository.findAllByAddress(address));
-        return customers.size() == 0 ? null : customers;
+        return new ArrayList<>(customerRepository.findAllByAddress(address));
     }
 
     // Get all customers by phone number
     public ArrayList<Customer> getAllCustomersByPhone(String phone) {
-        ArrayList<Customer> customers = new ArrayList<>(customerRepository.findAllByPhone(phone));
-        return customers.size() == 0 ? null : customers;
+        return new ArrayList<>(customerRepository.findAllByPhone(phone));
     }
 
     // Get one customer by id

@@ -2,8 +2,6 @@ package com.rmit.demo.service;
 
 import com.rmit.demo.model.Customer;
 import com.rmit.demo.repository.CustomerRepository;
-import org.checkerframework.checker.units.qual.C;
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,17 +13,18 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
+
     @Mock
     private CustomerRepository customerRepository;
 
@@ -148,5 +147,133 @@ class CustomerServiceTest {
         int result = customerService.deleteCustomer(validId);
         assertEquals(validId, result);
         assertThrows(NullPointerException.class, () -> customerService.deleteCustomer(invalidId));
+    }
+
+    @Test
+    @DisplayName("Test GET ALL Customer by Pagination")
+    void testPaginationGetAll() {
+        // Prepare Mock Data
+        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        customerArrayList.add(customer1);
+        customerArrayList.add(customer2);
+
+        // Mock Request
+        Pageable pageable = PageRequest.of(0, 1);
+        Page<Customer> customerPage = new PageImpl<>(customerArrayList.subList(0, 1));
+        Mockito.when(customerRepository.findAll(pageable)).thenReturn(customerPage);
+
+        // Verify & Assertion
+        ArrayList<Customer> mockedList = customerService.getAllCustomers(0, 1);
+        assertEquals(mockedList.size(), customerPage.getContent().size());
+        Mockito.verify(customerRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    @DisplayName("Test Empty GET ALL Customer by Pagination")
+    void testEmptyPaginationGetAll() {
+        // Prepare Mock Data
+        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        customerArrayList.add(customer1);
+        customerArrayList.add(customer2);
+
+        // Mock Request
+        Pageable pageable = PageRequest.of(0, 1);
+        Page<Customer> customerPage = new PageImpl<>(new ArrayList<>());
+        Mockito.when(customerRepository.findAll(pageable)).thenReturn(customerPage);
+
+        // Verify & Assertion
+        ArrayList<Customer> mockedList = customerService.getAllCustomers(0, 1);
+        assertEquals(mockedList.size(), customerPage.getContent().size());
+        Mockito.verify(customerRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    @DisplayName("Test Success GET ALL Customers by Name")
+    void testGetAllCustomersByName() {
+        String name = "Duy";
+        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        customerArrayList.add(customer1);
+        customerArrayList.add(customer2);
+        customerArrayList.add(customer3);
+
+        Mockito.when(customerRepository.findAllByName(name)).thenReturn(customerArrayList);
+        ArrayList<Customer> customerArrayList1 = customerService.getAllCustomersByName(name);
+        assertEquals(customerArrayList1, customerArrayList);
+        Mockito.verify(customerRepository, Mockito.times(1)).findAllByName(name);
+    }
+
+    @Test
+    @DisplayName("Test Fail GET ALL Customers by Name")
+    void testGetFailAllCustomersByName() {
+        String invalidName = "Someone";
+        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        customerArrayList.add(customer1);
+        customerArrayList.add(customer2);
+        customerArrayList.add(customer3);
+
+        Mockito.when(customerRepository.findAllByName(invalidName)).thenReturn(new ArrayList<>());
+        ArrayList<Customer> customerArrayList1 = customerService.getAllCustomersByName(invalidName);
+        assertEquals(customerArrayList1, new ArrayList<>());
+        Mockito.verify(customerRepository, Mockito.times(1)).findAllByName(invalidName);
+    }
+
+    @Test
+    @DisplayName("Test Success GET ALL Customers by Address")
+    void testGetAllCustomersByAddress() {
+        String address = "TpHCM";
+        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        customerArrayList.add(customer1);
+        customerArrayList.add(customer2);
+        customerArrayList.add(customer3);
+
+        Mockito.when(customerRepository.findAllByAddress(address)).thenReturn(customerArrayList);
+        ArrayList<Customer> customerArrayList1 = customerService.getAllCustomersByAddress(address);
+        assertEquals(customerArrayList1, customerArrayList);
+        Mockito.verify(customerRepository, Mockito.times(1)).findAllByAddress(address);
+    }
+
+    @Test
+    @DisplayName("Test Fail GET ALL Customers by Address")
+    void testGetFailAllCustomersByAddress() {
+        String invalidAddress = "TienGiang";
+        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        customerArrayList.add(customer1);
+        customerArrayList.add(customer2);
+        customerArrayList.add(customer3);
+
+        Mockito.when(customerRepository.findAllByAddress(invalidAddress)).thenReturn(new ArrayList<>());
+        ArrayList<Customer> customerArrayList1 = customerService.getAllCustomersByAddress(invalidAddress);
+        assertEquals(customerArrayList1, new ArrayList<>());
+        Mockito.verify(customerRepository, Mockito.times(1)).findAllByAddress(invalidAddress);
+    }
+
+    @Test
+    @DisplayName("Test Success GET ALL Customers by Phone")
+    void testGetAllCustomersByPhone() {
+        String phone = "0326795463";
+        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        customerArrayList.add(customer1);
+        customerArrayList.add(customer2);
+        customerArrayList.add(customer3);
+
+        Mockito.when(customerRepository.findAllByPhone(phone)).thenReturn(customerArrayList);
+        ArrayList<Customer> customerArrayList1 = customerService.getAllCustomersByPhone(phone);
+        assertEquals(customerArrayList1, customerArrayList);
+        Mockito.verify(customerRepository, Mockito.times(1)).findAllByPhone(phone);
+    }
+
+    @Test
+    @DisplayName("Test Fail GET ALL Customers by Phone")
+    void testGetFailAllCustomersByPhone() {
+        String invalidPhone = "001110001010";
+        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        customerArrayList.add(customer1);
+        customerArrayList.add(customer2);
+        customerArrayList.add(customer3);
+
+        Mockito.when(customerRepository.findAllByPhone(invalidPhone)).thenReturn(new ArrayList<>());
+        ArrayList<Customer> customerArrayList1 = customerService.getAllCustomersByPhone(invalidPhone);
+        assertEquals(customerArrayList1, new ArrayList<>());
+        Mockito.verify(customerRepository, Mockito.times(1)).findAllByPhone(invalidPhone);
     }
 }

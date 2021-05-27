@@ -1,6 +1,5 @@
 package com.rmit.demo.repository.impl;
 
-import com.rmit.demo.model.Category;
 import com.rmit.demo.model.Customer;
 import com.rmit.demo.repository.CustomerRepository;
 import com.rmit.demo.repository.CustomerRepositoryCustom;
@@ -26,4 +25,4 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
         // RETURN
         return customerRepository.findById(saved.getId()).orElse(null);
     }
-    }
+}
