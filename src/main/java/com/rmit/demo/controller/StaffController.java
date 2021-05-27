@@ -33,7 +33,7 @@ public class StaffController implements CrudController<Staff>{
             Staff staff = staffService.getOne(id);
             return ResponseHandler.generateResponse(HttpStatus.OK, true, "/staffs/" + staff.getId(), String.format("Staff with the id %d fetched successfully.", staff.getId()), staff);
         } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/staffs/" + id, String.format("Staff with the id %d not found.", id), new HashMap());
+            return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, false, "/staffs/" + id, String.format("Staff with the id %d not found.", id), new HashMap());
         }
     }
 

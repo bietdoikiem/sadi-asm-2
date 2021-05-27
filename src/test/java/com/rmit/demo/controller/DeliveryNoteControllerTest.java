@@ -271,11 +271,9 @@ class DeliveryNoteControllerTest {
         requestBody.put("date", "20-06-2021");
         requestBody.put("staff", staff1);
         String requestJson = asJsonString(requestBody);
-        // Mock data when requesting service
-        Mockito.lenient().when(deliveryNoteRepository.findById(validId)).thenReturn(Optional.of(deliveryNote1));
         // Update DeliveryNote1 by Date
         deliveryNote1.setDate(DateUtils.parseDate("20-05-2021"));
-        Mockito.lenient().when(deliveryNoteService.updateOne(intThat(id -> id == validId), isA(DeliveryNote.class))).thenReturn(deliveryNote1);
+        Mockito.when(deliveryNoteService.updateOne(intThat(id -> id == validId), isA(DeliveryNote.class))).thenReturn(deliveryNote1);
         // MockMvc HTTP Test
         mockMvc.perform(put("/delivery-notes/{id}",validId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -289,20 +287,16 @@ class DeliveryNoteControllerTest {
         int validId = 1;
         int invalidId = 99;
         // Mock Data
-        // Prepare Mocked data
-        Category category = new Category(1, "Classic Sneaker");
         // Prepare Json Request
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("date", "20-06-2001");
         requestBody.put("staff", staff1);
         String requestJson = asJsonString(requestBody);
-        // Mock data when requesting service
-        Mockito.lenient().when(deliveryNoteRepository.findById(validId)).thenReturn(Optional.of(deliveryNote1));
         // Update DeliveryNote1 by Date
         deliveryNote1.setDate(DateUtils.parseDate("20-05-2021"));
-        Mockito.lenient().when(deliveryNoteService.updateOne(intThat(id -> id == invalidId), isA(DeliveryNote.class))).thenReturn(deliveryNote1);
+        Mockito.when(deliveryNoteService.updateOne(intThat(id -> id == validId), isA(DeliveryNote.class))).thenReturn(deliveryNote1);
         // MockMvc HTTP Test
-        mockMvc.perform(put("/delivery-notes/{id}",validId)
+        mockMvc.perform(put("/delivery-notes/{id}", invalidId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isNotFound());
