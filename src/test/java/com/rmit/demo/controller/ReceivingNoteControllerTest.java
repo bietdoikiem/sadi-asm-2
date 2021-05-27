@@ -242,8 +242,7 @@ public class ReceivingNoteControllerTest {
         ReceivingNote receivingNote = new ReceivingNote(id, parsedDate1);
         ReceivingNote updatedReceivingNote = new ReceivingNote(id, parsedDate2);
         // Mocked responses
-        Mockito.lenient().when(receivingNoteRepository.findById(id)).thenReturn(Optional.of(receivingNote));
-        Mockito.lenient().when(receivingNoteService.updateOne(intThat(i -> i == id), isA(ReceivingNote.class))).thenReturn(updatedReceivingNote);
+        Mockito.when(receivingNoteService.updateOne(intThat(i -> i == id), isA(ReceivingNote.class))).thenReturn(updatedReceivingNote);
         mockMvc.perform(put("/receiving-notes/{id}", receivingNote.getId()).contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isOk());
@@ -269,9 +268,8 @@ public class ReceivingNoteControllerTest {
         ReceivingNote receivingNote = new ReceivingNote(1, parsedDate1);
         ReceivingNote updatedReceivingNote = new ReceivingNote(1, parsedDate2);
         // Mocked response
-        Mockito.lenient().when(receivingNoteRepository.findById(validId)).thenReturn(Optional.of(receivingNote)); // valid object
-        Mockito.lenient().when(receivingNoteService.updateOne(intThat(id -> id == validId), isA(ReceivingNote.class))).thenReturn(updatedReceivingNote); // mock update request
-        Mockito.lenient().when(receivingNoteService.updateOne(intThat(id -> id == invalidId), isA(ReceivingNote.class))).thenThrow(new NullPointerException()); // mock update request
+        Mockito.when(receivingNoteService.updateOne(intThat(id -> id == validId), isA(ReceivingNote.class))).thenReturn(updatedReceivingNote); // mock update request
+        Mockito.when(receivingNoteService.updateOne(intThat(id -> id == invalidId), isA(ReceivingNote.class))).thenThrow(new NullPointerException()); // mock update request
         // Perform Operation on valid entity successfully
         mockMvc.perform(put("/receiving-notes/{id}", validId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -296,8 +294,7 @@ public class ReceivingNoteControllerTest {
         int id = 1;
         ReceivingNote receivingNote = new ReceivingNote(id, parsedDate1);
 
-        Mockito.lenient().when(receivingNoteRepository.findById(id)).thenReturn(Optional.of(receivingNote));
-        Mockito.lenient().when(receivingNoteService.deleteOne(id)).thenReturn(id);
+        Mockito.when(receivingNoteService.deleteOne(id)).thenReturn(id);
 
         mockMvc.perform(delete("/receiving-notes/{id}", receivingNote.getId()))
                 .andExpect(status().isAccepted())

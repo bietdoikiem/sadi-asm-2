@@ -295,12 +295,11 @@ class SaleInvoiceControllerTest {
         requestBody.put("staff", staff2);
         String requestJson = asJsonString(requestBody);
         // Mock data when request
-        Mockito.lenient().when(saleInvoiceRepository.findById(validId)).thenReturn(Optional.of(saleInvoice1));
         // Update SaleInvoice1 by Date, Staff and Customer
         saleInvoice1.setDate(DateUtils.parseDate("27-06-2021"));
         saleInvoice1.setCustomer(customer2);
         saleInvoice1.setStaff(staff2);
-        Mockito.lenient().when(saleInvoiceService.updateOne(intThat(id -> id == validId), isA(SaleInvoice.class))).thenReturn(saleInvoice1);
+        Mockito.when(saleInvoiceService.updateOne(intThat(id -> id == validId), isA(SaleInvoice.class))).thenReturn(saleInvoice1);
         // MockMvc HTTP Test
         mockMvc.perform(put("/sale-invoices/{id}", validId)
                 .contentType(MediaType.APPLICATION_JSON)
