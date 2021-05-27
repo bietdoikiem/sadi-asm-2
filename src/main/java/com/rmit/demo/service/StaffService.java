@@ -19,26 +19,25 @@ public class StaffService {
 
     // Save one staff
     public Staff saveStaff(Staff staff) {
-        return staffRepository.save(staff);
+        return staffRepository.saveAndReset(staff);
     }
 
     // Update one staff
     public Staff updateStaff(int id, Staff staff) {
-        Staff existingStaff = staffRepository.findById(id).orElse(null);
-        if(existingStaff != null) {
-            existingStaff.setId(id);
-            existingStaff.setAddress(staff.getAddress());
-            existingStaff.setEmail(staff.getEmail());
-            existingStaff.setName(staff.getName());
-            existingStaff.setPhone(staff.getPhone());
-            return staffRepository.save(existingStaff);
-        }
-        return null;
+        Staff existingStaff = staffRepository.findById(id).orElseThrow(NullPointerException::new);
+        existingStaff.setAddress(staff.getAddress());
+        existingStaff.setEmail(staff.getEmail());
+        existingStaff.setName(staff.getName());
+        existingStaff.setPhone(staff.getPhone());
+        staffRepository.saveAndReset(existingStaff);
+        return existingStaff;
     }
 
     // Delete one staff
-    public void deleteStaff(int id) {
-        staffRepository.deleteById(id);
+    public int deleteStaff(int id) {
+        Staff staff = staffRepository.findById(id).orElseThrow(NullPointerException::new);
+        staffRepository.delete(staff);
+        return staff.getId();
     }
 
     // Get all staffs
@@ -48,20 +47,17 @@ public class StaffService {
 
     // Get all staffs by name
     public ArrayList<Staff> getAllStaffsByName(String name) {
-        ArrayList<Staff> staffs = new ArrayList<>(staffRepository.findAllByName(name));
-        return staffs.size() == 0 ? null : staffs;
+        return new ArrayList<>(staffRepository.findAllByName(name));
     }
 
     // Get all staff by address
     public ArrayList<Staff> getAllStaffsByAddress(String address) {
-        ArrayList<Staff> staffs = new ArrayList<>(staffRepository.findAllByAddress(address));
-        return staffs.size() == 0 ? null : staffs;
+        return new ArrayList<>(staffRepository.findAllByAddress(address));
     }
 
     // Get all staff by phone number
     public ArrayList<Staff> getAllStaffsByPhone(String phone) {
-        ArrayList<Staff> staffs = new ArrayList<>(staffRepository.findAllByPhone(phone));
-        return staffs.size() == 0 ? null : staffs;
+        return new ArrayList<>(staffRepository.findAllByPhone(phone));
     }
 
     // Get one staff by id
@@ -77,5 +73,4 @@ public class StaffService {
             return new ArrayList<>(allStaffs.getContent());
         return new ArrayList<>();
     }
-
 }
