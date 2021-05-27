@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 
 @Repository
-public interface OrderRepository extends CrudRepository<Order, Integer>, JpaRepository<Order, Integer> {
+public interface OrderRepository extends CrudRepository<Order, Integer>, JpaRepository<Order, Integer>, OrderRepositoryCustom {
 }

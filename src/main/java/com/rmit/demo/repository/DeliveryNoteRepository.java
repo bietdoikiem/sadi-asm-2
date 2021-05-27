@@ -11,6 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface DeliveryNoteRepository extends CrudRepository<DeliveryNote, Integer>, JpaRepository<DeliveryNote, Integer>, DeliveryNoteRepositoryCustom {
+public interface DeliveryNoteRepository extends JpaRepository<DeliveryNote, Integer>, DeliveryNoteRepositoryCustom {
     List<DeliveryNote> findAllByDateBetween(Date startDate, Date endDate);
 }

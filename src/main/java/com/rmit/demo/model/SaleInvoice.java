@@ -19,11 +19,11 @@ public class SaleInvoice {
     private Date date;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "staff_id", referencedColumnName = "id")
+    @JoinColumn(name = "staff_id", referencedColumnName = "id", nullable = false)
     private Staff staff;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
     @OneToMany(mappedBy = "saleInvoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -91,7 +91,7 @@ public class SaleInvoice {
         return saleDetailList;
     }
 
-    private void setSaleDetailList(List<SaleDetail> saleDetailList) {
+    public void setSaleDetailList(List<SaleDetail> saleDetailList) {
         this.saleDetailList = saleDetailList;
     }
 

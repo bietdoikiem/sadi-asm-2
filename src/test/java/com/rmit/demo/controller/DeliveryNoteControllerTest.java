@@ -23,6 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -43,25 +45,21 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class DeliveryNoteControllerTest {
 
-    @Mock
+    @MockBean
     protected DeliveryNoteService deliveryNoteService;
 
-    @Mock
+    @MockBean
     protected DeliveryNoteRepository deliveryNoteRepository;
 
-    @Mock
-    protected StaffRepository staffRepository;
 
-    @Mock
-    protected DeliveryDetailRepository deliveryDetailRepository;
-
+    @Autowired
     @InjectMocks
     protected DeliveryNoteController deliveryNoteController;
 
-    @Autowired
     protected MockMvc mockMvc;
 
     // Defined Mock Objects
@@ -126,10 +124,6 @@ class DeliveryNoteControllerTest {
     @Test
     @DisplayName("Test Success GET All Empty List of DeliveryNote")
     void testEmptyGetAll() throws Exception {
-        // Mocked Empty List
-        List<DeliveryNote> deliveryNoteList = new ArrayList<>();
-        // Mock service to return mocked objects
-        Mockito.when(deliveryNoteService.getAll()).thenReturn(deliveryNoteList);
         // MockMvc Http test
         mockMvc.perform(get("/delivery-notes"))
                 .andExpect(status().isOk())
@@ -145,8 +139,8 @@ class DeliveryNoteControllerTest {
         deliveryNoteList.add(deliveryNote1);
         deliveryNoteList.add(deliveryNote2);
         // Mock service to return mocked objects
-        Mockito.lenient().when(deliveryNoteService.getAll(0, 1)).thenReturn(deliveryNoteList.subList(0, 1));
-        Mockito.lenient().when(deliveryNoteService.getAll(1, 1)).thenReturn(deliveryNoteList.subList(1, 2));
+        Mockito.when(deliveryNoteService.getAll(0, 1)).thenReturn(deliveryNoteList.subList(0, 1));
+        Mockito.when(deliveryNoteService.getAll(1, 1)).thenReturn(deliveryNoteList.subList(1, 2));
         // Mock Mvc Http Test
         // Test retrieve first page (index 0) with size 1
         mockMvc.perform(get("/delivery-notes")
@@ -206,6 +200,8 @@ class DeliveryNoteControllerTest {
         int validId = 1;
         // Mock service to return mocked data
         Mockito.when(deliveryNoteService.getOne(validId)).thenReturn(deliveryNote1);
+        Mockito.when(deliveryNoteService.getOne(invalidId)).thenThrow(new NullPointerException());
+
         // MockMvc HTTP Test
         // Mock valid DeliveryNote assertion
         mockMvc.perform(get("/delivery-notes/{id}", validId))
@@ -228,7 +224,7 @@ class DeliveryNoteControllerTest {
         deliveryDetailList.add(new DeliveryDetail(product2, 1));
         // Prepare Json Request
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("date", "25-06-2001");
+        requestBody.put("date", "25-05-2021");
         requestBody.put("staff", staff1);
         requestBody.put("deliveryDetailList", deliveryDetailList);
         String requestJson = asJsonString(requestBody);
@@ -270,12 +266,9 @@ class DeliveryNoteControllerTest {
     @DisplayName("Test Success UPDATE for DeliveryNote (Date)")
     void testUpdateOne() throws Exception {
         int validId = 1;
-        // Mock Data
-        // Prepare Mocked data
-        Category category = new Category(1, "Classic Sneaker");
         // Prepare Json Request
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("date", "20-06-2001");
+        requestBody.put("date", "20-06-2021");
         requestBody.put("staff", staff1);
         String requestJson = asJsonString(requestBody);
         // Mock data when requesting service
@@ -368,7 +361,7 @@ class DeliveryNoteControllerTest {
     }
 
     @Test
-    @DisplayName("Test Fail GET All Delivery Details by DeliveryNote Id")
+    @DisplayName("Test Fail GET All Delivery Details by Invalid DeliveryNote Id")
     void testFailGetDeliveryDetailsByDeliveryNoteId() throws Exception {
         int invalidId = 99;
         // Prepare Mocked data
@@ -393,17 +386,25 @@ class DeliveryNoteControllerTest {
         deliveryNoteList.add(deliveryNote1);
         deliveryNoteList.add(deliveryNote2);
         // Prepare Mock Request
-        Mockito.when(deliveryNoteService.filterByPeriod(DateUtils.parseDate("25-05-2021"), DateUtils.parseDate("28-05-2021"))).thenReturn(deliveryNoteList);
+        Mockito.when(deliveryNoteService.filterByPeriod(DateUtils.parseDate("25-05-2021"),
+                DateUtils.parseDate("28-05-2021"))).thenReturn(deliveryNoteList);
+        Mockito.when(deliveryNoteService.filterByPeriod(DateUtils.parseDate("25-05-2021"),
+                DateUtils.parseDate("27-05-2021"))).thenReturn(deliveryNoteList.subList(0, 1));
         // MockMVC HTTP Test
         mockMvc.perform(get("/delivery-notes/filter")
                         .param("startDate", "25-05-2021")
                         .param("endDate", "28-05-2021"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(2)));
+        mockMvc.perform(get("/delivery-notes/filter")
+                .param("startDate", "25-05-2021")
+                .param("endDate", "27-05-2021"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(1)));
     }
 
     @Test
-    @DisplayName("Test Success GET All DeliveryNote in a period without any item")
+    @DisplayName("Test Empty GET All DeliveryNote in a period without any item")
     void testEmptyGetDeliveryNoteByPeriod() throws Exception {
         // Prepare Mocked Object
         List<DeliveryNote> deliveryNoteList = new ArrayList<>();

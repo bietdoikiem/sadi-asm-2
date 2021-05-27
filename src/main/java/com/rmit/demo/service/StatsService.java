@@ -21,12 +21,6 @@ public class StatsService {
     private SaleInvoiceService saleInvoiceService;
 
     @Autowired
-    private DeliveryNoteService deliveryNoteService;
-
-    @Autowired
-    private ReceivingNoteService receivingNoteService;
-
-    @Autowired
     private SaleInvoiceRepository saleInvoiceRepository;
 
     // RETRIEVE REVENUE By Customer in a period
@@ -60,60 +54,10 @@ public class StatsService {
     // List of Products filtered by DeliveryNote and ReceivingNote during a period of time
     public List<NoteStatsResponse> getProductsByDeliverNoteAndReceivingNoteAndPeriod(Date startDate, Date endDate) {
         List<NoteStatsResponse> statsResponseList = saleInvoiceRepository.findProductsReceivedAndDeliveredBetween(startDate, endDate);
-        if (statsResponseList.size() == 0) {
-            return new ArrayList<>();
+        if (statsResponseList.size() > 0) {
+            return statsResponseList;
         }
-        return statsResponseList;
+        return new ArrayList<>();
     }
 
-//    // Define inner class for
-//    @Component
-//    public class ProductStat {
-//
-//        private Product product;
-//        private int received;
-//        private int deliver;
-//        private int balance;
-//
-//        public ProductStat() {};
-//
-//        public ProductStat(Product product, int received, int deliver, int balance) {
-//            this.product = product;
-//            this.received = received;
-//            this.deliver = deliver;
-//            this.balance = balance;
-//        }
-//
-//        public Product getProduct() {
-//            return product;
-//        }
-//
-//        public void setProduct(Product product) {
-//            this.product = product;
-//        }
-//
-//        public int getReceived() {
-//            return received;
-//        }
-//
-//        public void setReceived(int received) {
-//            this.received = received;
-//        }
-//
-//        public int getDeliver() {
-//            return deliver;
-//        }
-//
-//        public void setDeliver(int deliver) {
-//            this.deliver = deliver;
-//        }
-//
-//        public int getBalance() {
-//            return balance;
-//        }
-//
-//        public void setBalance(int balance) {
-//            this.balance = balance;
-//        }
-//    }
 }

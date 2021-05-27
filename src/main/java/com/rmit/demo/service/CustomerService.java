@@ -19,28 +19,27 @@ public class CustomerService {
 
     // Save one customer
     public Customer saveCustomer(Customer customer) {
-        return customerRepository.save(customer);
+        return customerRepository.saveAndReset(customer);
     }
 
     // Update one customer
     public Customer updateCustomer(int id, Customer customer) {
-        Customer existingCustomer = customerRepository.findById(id).orElse(null);
-        if(existingCustomer != null) {
-            existingCustomer.setId(id);
-            existingCustomer.setContactPerson(customer.getContactPerson());
-            existingCustomer.setPhone(customer.getPhone());
-            existingCustomer.setAddress(customer.getAddress());
-            existingCustomer.setEmail(customer.getEmail());
-            existingCustomer.setFax(customer.getFax());
-            existingCustomer.setName(customer.getName());
-            return customerRepository.save(existingCustomer);
-        }
-        return null;
+        Customer existingCustomer = customerRepository.findById(id).orElseThrow(NullPointerException::new);
+        existingCustomer.setContactPerson(customer.getContactPerson());
+        existingCustomer.setPhone(customer.getPhone());
+        existingCustomer.setAddress(customer.getAddress());
+        existingCustomer.setEmail(customer.getEmail());
+        existingCustomer.setFax(customer.getFax());
+        existingCustomer.setName(customer.getName());
+        customerRepository.saveAndReset(existingCustomer);
+        return existingCustomer;
     }
 
     // Delete one customer
-    public void deleteCustomer(int id) {
-        customerRepository.deleteById(id);
+    public int deleteCustomer(int id) {
+        Customer customer = customerRepository.findById(id).orElseThrow(NullPointerException::new);
+        customerRepository.delete(customer);
+        return customer.getId();
     }
 
     // Get all customers
@@ -50,25 +49,22 @@ public class CustomerService {
 
     // Get all customers by name
     public ArrayList<Customer> getAllCustomersByName(String name) {
-        ArrayList<Customer> customers = new ArrayList<>(customerRepository.findAllByName(name));
-        return customers.size() == 0 ? null : customers;
+        return new ArrayList<>(customerRepository.findAllByName(name));
     }
 
     // Get all customers by address
     public ArrayList<Customer> getAllCustomersByAddress(String address) {
-        ArrayList<Customer> customers = new ArrayList<>(customerRepository.findAllByAddress(address));
-        return customers.size() == 0 ? null : customers;
+        return new ArrayList<>(customerRepository.findAllByAddress(address));
     }
 
     // Get all customers by phone number
     public ArrayList<Customer> getAllCustomersByPhone(String phone) {
-        ArrayList<Customer> customers = new ArrayList<>(customerRepository.findAllByPhone(phone));
-        return customers.size() == 0 ? null : customers;
+        return new ArrayList<>(customerRepository.findAllByPhone(phone));
     }
 
     // Get one customer by id
     public Customer getOne(int id) {
-        return customerRepository.findById(id).orElse(null);
+        return customerRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 
     // Get all customers by pagination

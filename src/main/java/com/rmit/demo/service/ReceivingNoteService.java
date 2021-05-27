@@ -63,7 +63,7 @@ public class ReceivingNoteService implements CrudService<ReceivingNote>{
         for (ReceiveDetail receiveDetail: receivingNote.getReceiveDetailList()) {
             receiveDetail.setReceivingNote(receivingNote);
         }
-        return receivingNoteRepository.save(receivingNote);
+        return receivingNoteRepository.saveAndReset(receivingNote);
     }
 
     // Delete receiving note
@@ -75,10 +75,10 @@ public class ReceivingNoteService implements CrudService<ReceivingNote>{
 
     // Update receiving note
     public ReceivingNote updateOne(int receivingNoteId, ReceivingNote receivingNote) {
-        ReceivingNote existingReceivingNote = receivingNoteRepository.findById(receivingNoteId).orElse(null);
+        ReceivingNote existingReceivingNote = receivingNoteRepository.findById(receivingNoteId).orElseThrow(NullPointerException::new);
         if (existingReceivingNote != null) {
             existingReceivingNote.setAll(receivingNote);
-            return receivingNoteRepository.save(existingReceivingNote);
+            return receivingNoteRepository.saveAndReset(existingReceivingNote);
         }
         return null;
     }

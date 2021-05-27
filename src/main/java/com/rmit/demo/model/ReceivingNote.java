@@ -38,6 +38,12 @@ public class ReceivingNote {
         this.receiveDetailList = receiveDetailList;
     }
 
+    // For testing
+    public ReceivingNote(int id, Date date) {
+        this.id = id;
+        this.date = date;
+    }
+
 
     public int getId() {
         return id;

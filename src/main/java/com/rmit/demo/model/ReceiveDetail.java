@@ -39,6 +39,11 @@ public class ReceiveDetail {
         this.receivingNote = receivingNote;
     }
 
+    public ReceiveDetail(int id, int quantity) {
+        this.id = id;
+        this.quantity = quantity;
+    }
+
 
     public Product getProduct() {
         return product;
