@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -31,18 +33,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class OrderControllerTest {
 
-    @Mock
+    @MockBean
     protected OrderService orderService;
-    @Mock
+    @MockBean
     protected OrderRepository orderRepository;
 
+    @Autowired
     @InjectMocks
     protected OrderController orderController;
 
-    @Autowired
     protected MockMvc mockMvc;
 
     // Convert To JSON string func

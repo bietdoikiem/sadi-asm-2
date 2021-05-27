@@ -19,6 +19,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -35,17 +37,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class ReceivingNoteControllerTest {
-    @Mock
+
+    @MockBean
     protected ReceivingNoteService receivingNoteService;
-    @Mock
+    @MockBean
     protected ReceivingNoteRepository receivingNoteRepository;
 
+    @Autowired
     @InjectMocks
     protected ReceivingNoteController receivingNoteController;
 
-    @Autowired
     protected MockMvc mockMvc;
 
     // Convert To JSON string func
