@@ -72,7 +72,7 @@ public class CustomerService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Customer> allCustomers = customerRepository.findAll(pageable);
         if(allCustomers.hasContent())
-            return new ArrayList<>(allCustomers.getContent());
+            return (ArrayList<Customer>) allCustomers.getContent();
         return new ArrayList<>();
     }
 }
