@@ -43,6 +43,11 @@ public class Order {
         this.orderDetails = orderDetails;
     }
 
+    public Order(int id, Date date) {
+        this.id = id;
+        this.date = date;
+    }
+
 
     public int getId() {
         return id;

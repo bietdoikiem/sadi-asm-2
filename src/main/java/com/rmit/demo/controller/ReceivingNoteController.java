@@ -43,12 +43,9 @@ public class ReceivingNoteController implements CrudController<ReceivingNote> {
 
     @Override
     public ResponseEntity<Object> getOne(int id) {
-        try {
-            ReceivingNote receivingNote = receivingNoteService.getOne(id);
-            return ResponseHandler.generateResponse(HttpStatus.OK, true, "/receiving-notes/" + receivingNote.getId(), String.format("Receiving note %d fetched successfully.", receivingNote.getId()), receivingNote);
-        } catch (NullPointerException e) {
-            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, false, "/receiving-notes/" + id, String.format("Receiving note %d not found.", id), new HashMap());
-        }
+
+        ReceivingNote receivingNote = receivingNoteService.getOne(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true, "/receiving-notes/" + receivingNote.getId(), String.format("Receiving note %d fetched successfully.", receivingNote.getId()), receivingNote);
     }
 
     @Override
