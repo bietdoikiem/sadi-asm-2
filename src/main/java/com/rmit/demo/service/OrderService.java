@@ -69,7 +69,7 @@ public class OrderService implements CrudService<Order> {
 
     // Update order
     public Order updateOne(int orderId, Order order) {
-        Order foundOrder = orderRepository.findById(orderId).orElse(null);
+        Order foundOrder = orderRepository.findById(orderId).orElseThrow(NullPointerException::new);
         if (foundOrder != null) {
             foundOrder.setAll(order);
             // Assign new list of order details and remove orphan (if there's ONE)
