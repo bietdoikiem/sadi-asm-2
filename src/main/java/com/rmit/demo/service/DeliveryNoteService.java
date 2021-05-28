@@ -66,6 +66,14 @@ public class DeliveryNoteService implements CrudService<DeliveryNote> {
         if (foundDeliveryNote != null) {
             foundDeliveryNote.setDate(deliveryNote.getDate());
             foundDeliveryNote.setStaff(deliveryNote.getStaff());
+            // Assign new list of order details and remove orphan (if there's ONE)
+            if (deliveryNote.getDeliveryDetailList() != null) {
+                foundDeliveryNote.getDeliveryDetailList().clear();
+                for (DeliveryDetail deliveryDetail : deliveryNote.getDeliveryDetailList()) {
+                    deliveryDetail.setDeliveryNote(foundDeliveryNote);
+                }
+                foundDeliveryNote.getDeliveryDetailList().addAll(deliveryNote.getDeliveryDetailList());
+            }
             return deliveryNoteRepository.saveAndReset(foundDeliveryNote);
         }
         return null;

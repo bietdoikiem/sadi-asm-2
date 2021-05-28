@@ -80,6 +80,14 @@ public class SaleInvoiceService implements CrudService<SaleInvoice> {
         foundSaleInvoice.setStaff(object.getStaff());
         foundSaleInvoice.setCustomer(object.getCustomer());
         foundSaleInvoice.setTotalValue(object.getTotalValue());
+        // Assign new list of sale details and remove orphan (if there's ONE)
+        if (object.getSaleDetailList() != null) {
+            foundSaleInvoice.getSaleDetailList().clear();
+            for (SaleDetail saleDetail: object.getSaleDetailList()) {
+                saleDetail.setSaleInvoice(foundSaleInvoice);
+            }
+            foundSaleInvoice.getSaleDetailList().addAll(object.getSaleDetailList());
+        }
         return saleInvoiceRepository.saveAndReset(foundSaleInvoice);
     }
 

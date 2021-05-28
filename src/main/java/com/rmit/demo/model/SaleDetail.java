@@ -26,14 +26,14 @@ public class SaleDetail {
     private int quantity;
 
     @Column
-    private int price;
+    private double price;
 
     public SaleDetail() {
     }
 
     ;
 
-    public SaleDetail(int id, SaleInvoice saleInvoice, Product product, int quantity, int price) {
+    public SaleDetail(int id, SaleInvoice saleInvoice, Product product, int quantity, double price) {
         this.id = id;
         this.saleInvoice = saleInvoice;
         this.product = product;
@@ -73,11 +73,11 @@ public class SaleDetail {
         this.quantity = quantity;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
