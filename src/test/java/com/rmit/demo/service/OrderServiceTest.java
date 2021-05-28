@@ -25,8 +25,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceTest {
@@ -157,6 +157,7 @@ public class OrderServiceTest {
         Mockito.lenient().when(orderRepository.findById(ArgumentMatchers.eq(validId))).thenReturn(Optional.of(order1));
         Mockito.lenient().when(orderRepository.saveAndReset(order1)).thenReturn(updatedOne);
         assertThrows(NullPointerException.class, () -> orderService.updateOne(invalidId, updatedOne));
+        verify(orderRepository, times(1)).findById(invalidId);
     }
 
     @Test
