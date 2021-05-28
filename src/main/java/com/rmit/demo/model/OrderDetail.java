@@ -19,7 +19,7 @@ public class OrderDetail {
     private Product product;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     private Order order;
 
     @Column
@@ -31,11 +31,18 @@ public class OrderDetail {
     public OrderDetail() {
     }
 
-    public OrderDetail(Order order, int quantity, double price, Product product) {
+    public OrderDetail(int id, Order order, int quantity, double price, Product product) {
+        this.id = id;
         this.order = order;
         this.quantity = quantity;
         this.price = price;
         this.product = product;
+    }
+
+    public OrderDetail (int id, int quantity, double price) {
+        this.id = id;
+        this.quantity = quantity;
+        this.price = price;
     }
 
     public int getQuantity() {
@@ -79,7 +86,6 @@ public class OrderDetail {
     }
 
     public void setAll(OrderDetail orderDetail) {
-        this.id = orderDetail.getId();
         this.product = orderDetail.getProduct();
         this.order = orderDetail.getOrder();
         this.quantity = orderDetail.getQuantity();

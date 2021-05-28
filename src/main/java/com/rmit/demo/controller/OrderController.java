@@ -1,10 +1,7 @@
 package com.rmit.demo.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.rmit.demo.model.Order;
-import com.rmit.demo.model.Product;
-import com.rmit.demo.model.Provider;
-import com.rmit.demo.model.ReceivingNote;
+import com.rmit.demo.model.*;
 import com.rmit.demo.service.OrderService;
 import com.rmit.demo.utils.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +70,15 @@ public class OrderController implements CrudController<Order>{
     public ResponseEntity<Object> deleteOne(int id) {
         orderService.deleteOne(id);
         return ResponseHandler.generateResponse(HttpStatus.ACCEPTED, true, "/orders/" + id, String.format("Order %d deleted successfully.", id), null);
+    }
+
+    // READ All Order Details of an Order by its ID
+    @RequestMapping(value = "/{id}/order-details", method = RequestMethod.GET)
+    public ResponseEntity<Object> getOrderDetailListByOrder(@PathVariable int id) {
+        List<OrderDetail> orderDetailList = orderService.getOrderDetailListByOrder(id);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true,
+                String.format("/orders/%d/order-details", id),
+                String.format("All OrderDetail of Order %d fetched successfully.", id),
+                orderDetailList);
     }
 }

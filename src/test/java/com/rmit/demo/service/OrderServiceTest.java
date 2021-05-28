@@ -2,6 +2,7 @@ package com.rmit.demo.service;
 
 import com.rmit.demo.model.Category;
 import com.rmit.demo.model.Order;
+import com.rmit.demo.model.OrderDetail;
 import com.rmit.demo.repository.OrderRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,6 +109,15 @@ public class OrderServiceTest {
     @Test
     @DisplayName("Test Success CREATE method for Order")
     void testSaveOne() {
+        // Prepare Mock data
+        OrderDetail orderDetail1 = new OrderDetail(1,2,13.4);
+        OrderDetail orderDetail2 = new OrderDetail(2,4,25.6);
+
+        List<OrderDetail> orderDetailList = new ArrayList<>();
+        orderDetailList.add(orderDetail1);
+        orderDetailList.add(orderDetail2);
+        order1.setOrderDetailList(orderDetailList);
+
         Mockito.when(orderRepository.saveAndReset(order1)).thenReturn(order1);
         Order savedOrder = orderService.saveOne(order1);
         assertEquals(order1, savedOrder);
