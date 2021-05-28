@@ -78,10 +78,8 @@ public class ReceivingNote {
     }
 
     public void setAll(ReceivingNote receivingNote) {
-        this.id = receivingNote.getId();
         this.date = receivingNote.getDate();
         this.staff = receivingNote.getStaff();
-        this.receiveDetailList = receivingNote.getReceiveDetailList();
 
     }
 

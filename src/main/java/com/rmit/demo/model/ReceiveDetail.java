@@ -12,20 +12,13 @@ public class ReceiveDetail {
     private int id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id") // , referencedColumnName = "id"
     private Product product;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "receiving_note_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "receiving_note_id")// , referencedColumnName = "id", nullable = false
     private ReceivingNote receivingNote;
 
-    public ReceivingNote getReceivingNote() {
-        return receivingNote;
-    }
-
-    public void setReceivingNote(ReceivingNote receivingNote) {
-        this.receivingNote = receivingNote;
-    }
 
     @Column
     private int quantity;
@@ -69,8 +62,16 @@ public class ReceiveDetail {
         this.id = id;
     }
 
+
+    public ReceivingNote getReceivingNote() {
+        return receivingNote;
+    }
+
+    public void setReceivingNote(ReceivingNote receivingNote) {
+        this.receivingNote = receivingNote;
+    }
+
     public void setAll (ReceiveDetail receiveDetail) {
-        this.id = receiveDetail.getId();
         this.product = receiveDetail.getProduct();
         this.quantity = receiveDetail.getQuantity();
     }
