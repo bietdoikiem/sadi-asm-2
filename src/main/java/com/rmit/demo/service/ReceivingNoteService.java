@@ -75,10 +75,18 @@ public class ReceivingNoteService implements CrudService<ReceivingNote>{
 
     // Update receiving note
     public ReceivingNote updateOne(int receivingNoteId, ReceivingNote receivingNote) {
-        ReceivingNote existingReceivingNote = receivingNoteRepository.findById(receivingNoteId).orElseThrow(NullPointerException::new);
-        if (existingReceivingNote != null) {
-            existingReceivingNote.setAll(receivingNote);
-            return receivingNoteRepository.saveAndReset(existingReceivingNote);
+        ReceivingNote foundReceivingNote = receivingNoteRepository.findById(receivingNoteId).orElse(null);
+        if (foundReceivingNote != null) {
+            foundReceivingNote.setAll(receivingNote);
+            // Assign new list of order details and remove orphan (if there's ONE)
+            if (receivingNote.getReceiveDetailList() != null) {
+                foundReceivingNote.getReceiveDetailList().clear();
+                for (ReceiveDetail receiveDetail : receivingNote.getReceiveDetailList()) {
+                    receiveDetail.setReceivingNote(foundReceivingNote);
+                }
+                foundReceivingNote.getReceiveDetailList().addAll(receivingNote.getReceiveDetailList());
+            }
+            return receivingNoteRepository.saveAndReset(foundReceivingNote);
         }
         return null;
     }

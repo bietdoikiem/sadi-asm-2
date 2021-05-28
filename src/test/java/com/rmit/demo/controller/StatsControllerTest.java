@@ -117,6 +117,34 @@ class StatsControllerTest {
         product1 = product2 = null;
     }
 
+    @Test
+    @DisplayName("Test Success GET Total Revenue in a period")
+    void testGetRevenueByPeriod() throws Exception {
+        // Prepare Mock Request
+        Mockito.when(statsService.getRevenueByPeriod(DateUtils.parseDate("26-05-2021"), DateUtils.parseDate("31-05-2021")))
+                .thenReturn(1600.0);
+        // Prepare MockMVC HTTP Test
+        mockMvc.perform(get("/stats/revenue/filter")
+                .param("startDate", "26-05-2021")
+                .param("endDate", "31-05-2021"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", is(1600.0)));
+
+        // Malfunction params test
+        mockMvc.perform(get("/stats/revenue/filter")
+                .param("startDate", "26-05-")
+                .param("endDate", "31-05-"))
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    @DisplayName("Test Fail GET Total Revenue in a period")
+    void testFailGetRevenueByPeriod() throws Exception {
+        // Malfunction date input params HTTP Test
+        mockMvc.perform(get("/stats/revenue/filter")
+                .param("startDate", "26-05-")
+                .param("endDate", "31-05-"))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
     @DisplayName("Test Success GET Revenue by Customer in a period")

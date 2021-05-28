@@ -119,6 +119,40 @@ class StatsServiceTest {
     }
 
     @Test
+    @DisplayName("Test Success GET Total Revenue in a period")
+    void testGetRevenueByPeriod() {
+        // Prepare Mock Data
+        List<SaleInvoice> saleInvoiceList = new ArrayList<>();
+        saleInvoiceList.add(saleInvoice1);
+        saleInvoiceList.add(saleInvoice2);
+        List<SaleDetail> saleDetailList1 = new ArrayList<>();
+        List<SaleDetail> saleDetailList2 = new ArrayList<>();
+        saleDetailList1.add(saleDetail1);
+        saleDetailList1.add(saleDetail2);
+        saleDetailList2.add(saleDetail3);
+        saleDetailList2.add(saleDetail4);
+        saleInvoice1.setSaleDetailList(saleDetailList1);
+        saleInvoice2.setSaleDetailList(saleDetailList2);
+        // Mock repository layer
+        Mockito.when(saleInvoiceService.filterByPeriod(DateUtils.parseDate("26-05-2021"), DateUtils.parseDate("31-05-2021")))
+                .thenReturn(saleInvoiceList);
+        double totalRevenue = statsService.getRevenueByPeriod(DateUtils.parseDate("26-05-2021"), DateUtils.parseDate("31-05-2021"));
+        assertEquals(1600.0, totalRevenue);
+        verify(saleInvoiceService, times(1)).filterByPeriod(DateUtils.parseDate("26-05-2021"), DateUtils.parseDate("31-05-2021"));
+    }
+
+    @Test
+    @DisplayName("Test Empty GET Total Revenue in a period")
+    void testEmptyGetRevenueByPeriod() {
+        // Mock repository layer
+        Mockito.when(saleInvoiceService.filterByPeriod(DateUtils.parseDate("26-05-2021"), DateUtils.parseDate("31-05-2021")))
+                .thenReturn(new ArrayList<>());
+        double totalRevenue = statsService.getRevenueByPeriod(DateUtils.parseDate("26-05-2021"), DateUtils.parseDate("31-05-2021"));
+        assertEquals(0.0, totalRevenue);
+        verify(saleInvoiceService, times(1)).filterByPeriod(DateUtils.parseDate("26-05-2021"), DateUtils.parseDate("31-05-2021"));
+    }
+
+    @Test
     @DisplayName("Test Success GET Revenue By Customer and Period")
     void testGetRevenueByCustomerAndPeriod() {
         // Prepare Mock Data

@@ -26,19 +26,19 @@ public class SaleInvoice {
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
-    @OneToMany(mappedBy = "saleInvoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "saleInvoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<SaleDetail> saleDetailList;
 
 
     @Column
-    private int totalValue;
+    private double totalValue;
 
     public SaleInvoice() {
     }
 
 
-    public SaleInvoice(int id, Date date, Staff staff, Customer customer, int totalValue) {
+    public SaleInvoice(int id, Date date, Staff staff, Customer customer, double totalValue) {
         this.id = id;
         this.date = date;
         this.staff = staff;
@@ -78,11 +78,11 @@ public class SaleInvoice {
         this.customer = customer;
     }
 
-    public int getTotalValue() {
+    public double getTotalValue() {
         return totalValue;
     }
 
-    public void setTotalValue(int totalValue) {
+    public void setTotalValue(double totalValue) {
         this.totalValue = totalValue;
     }
 

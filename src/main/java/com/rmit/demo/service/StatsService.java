@@ -23,6 +23,20 @@ public class StatsService {
     @Autowired
     private SaleInvoiceRepository saleInvoiceRepository;
 
+    // RETRIEVE REVENUE by period
+    public double getRevenueByPeriod(Date startDate, Date endDate) {
+        List<SaleInvoice> saleInvoiceList = saleInvoiceService.filterByPeriod(startDate, endDate);
+        double totalRevenue = 0;
+        for (SaleInvoice saleInvoice: saleInvoiceList) {
+            // Total value of invoice = all product quantities * price
+            // Iterate through list of Sale details
+            for (SaleDetail saleDetail: saleInvoice.getSaleDetailList()) {
+                totalRevenue += saleDetail.getProduct().getPrice() * saleDetail.getQuantity();
+            }
+        }
+        return totalRevenue;
+    }
+
     // RETRIEVE REVENUE By Customer in a period
     public double getRevenueByCustomerAndPeriod(int id, Date startDate, Date endDate) {
         List<SaleInvoice> saleInvoiceList = saleInvoiceService.getAllSaleInvoicesByCustomerAndPeriod(id, startDate, endDate);

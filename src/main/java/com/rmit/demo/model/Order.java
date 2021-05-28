@@ -2,6 +2,7 @@ package com.rmit.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,19 +29,19 @@ public class Order {
     @JoinColumn(name = "provider_id", referencedColumnName = "id")
     private Provider provider;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonIgnore
-    private List<OrderDetail> orderDetails;
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<OrderDetail> orderDetailList;
 
     public Order() {
     }
 
-    public Order(int id, Date date, Staff staff, Provider provider, List<OrderDetail> orderDetails) {
+    public Order(int id, Date date, Staff staff, Provider provider, List<OrderDetail> orderDetailList) {
         this.id = id;
         this.date = date;
         this.staff = staff;
         this.provider = provider;
-        this.orderDetails = orderDetails;
+        this.orderDetailList = orderDetailList;
     }
 
     public Order(int id, Date date) {
@@ -65,13 +66,13 @@ public class Order {
         this.date = date;
     }
 
-    public List<OrderDetail> getOrderDetails() {
-        return orderDetails;
+    public List<OrderDetail> getOrderDetailList() {
+        return orderDetailList;
     }
 
 
-    public void setOrderDetails(List<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
+    public void setOrderDetailList(List<OrderDetail> orderDetails) {
+        this.orderDetailList = orderDetails;
     }
 
 
@@ -89,6 +90,12 @@ public class Order {
 
     public void setProvider(Provider provider) {
         this.provider = provider;
+    }
+
+    public void setAll(Order order) {
+        this.date = order.getDate();
+        this.staff = order.getStaff();
+        this.provider = order.getProvider();
     }
 
 

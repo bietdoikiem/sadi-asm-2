@@ -21,6 +21,20 @@ public class StatsController {
     private StatsService statsService;
 
     // RETRIEVE REVENUE of A Customer in a period
+    @RequestMapping(path = "/revenue/filter", method = RequestMethod.GET, params = {"startDate", "endDate"})
+    public ResponseEntity<Object> getRevenueByPeriod(
+                                                                @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+                                                                @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate) {
+        String startDateStr = DateUtils.dateToString(startDate);
+        String endDateStr = DateUtils.dateToString(endDate);
+        double totalRevenue = statsService.getRevenueByPeriod(startDate, endDate);
+        return ResponseHandler.generateResponse(HttpStatus.OK, true,
+                String.format("/stats/revenue/filter?startDate=%s&endDate=%s", startDateStr, endDateStr),
+                String.format("Total Revenue is %.2f between %s and %s",totalRevenue, startDateStr, endDateStr), totalRevenue);
+    }
+
+
+    // RETRIEVE REVENUE of A Customer in a period
     @RequestMapping(path = "/customers/{id}/revenue/filter", method = RequestMethod.GET, params = {"startDate", "endDate"})
     public ResponseEntity<Object> getRevenueByCustomerAndPeriod(@PathVariable int id,
                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
@@ -29,7 +43,7 @@ public class StatsController {
         String endDateStr = DateUtils.dateToString(endDate);
         double totalRevenue = statsService.getRevenueByCustomerAndPeriod(id, startDate, endDate);
         return ResponseHandler.generateResponse(HttpStatus.OK, true,
-                String.format("/sale-invoices/by-customer/%d/revenue/filter?startDate=%s&endDate=%s", id, startDateStr, endDateStr),
+                String.format("/stats/customers/%d/revenue/filter?startDate=%s&endDate=%s", id, startDateStr, endDateStr),
                 String.format("Total Revenue of Customer %d is %.2f between %s and %s", id, totalRevenue, startDateStr, endDateStr), totalRevenue);
     }
 
@@ -42,7 +56,7 @@ public class StatsController {
         String endDateStr = DateUtils.dateToString(endDate);
         double totalRevenue = statsService.getRevenueByStaffAndPeriod(id, startDate, endDate);
         return ResponseHandler.generateResponse(HttpStatus.OK, true,
-                String.format("/sale-invoices/by-staff/%d/revenue/filter?startDate=%s&endDate=%s", id, startDateStr, endDateStr),
+                String.format("/stats/staffs/%d/revenue/filter?startDate=%s&endDate=%s", id, startDateStr, endDateStr),
                 String.format("Total Revenue of Staff %d is %.2f between %s and %s", id, totalRevenue, startDateStr, endDateStr), totalRevenue);
     }
 
